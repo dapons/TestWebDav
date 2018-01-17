@@ -1,0 +1,1195 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+AdamMil.WebDAV.Server is a library providing a flexible, extensible, and fairly
+standards-compliant WebDAV server for the .NET Framework.
+
+http://www.adammil.net/
+Written 2012-2016 by Adam Milazzo.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+<DAV>
+  <Common>
+    <ShouldDenyAccess>
+      <param name="access">
+        The type of access requested expressed as a qualified name, generally of a lock type. For example, passing
+        <see cref="DAVNames.write"/> (which is the name of the write lock type) will test for write access. Null may be passed to test for
+        read access. If you define additional access types, you may use those as well.
+      </param>
+      <param name="response">
+        If the user is to be denied access, this variable should receive a <see cref="ConditionCode"/> that indicates the type of response
+        that should be sent to the client, or null to use the default response. If authorization filters disagree on the response, the
+        first non-null value will be used. Typical values are <see cref="ConditionCodes.Unauthorized"/> to request authorization and
+        <see cref="ConditionCodes.NotFound"/> to pretend that the resource doesn't exist. <see cref="ConditionCodes.Forbidden"/> is the
+        default and generally shouldn't be returned, but may be returned if you want to prevent another authorization filter from
+        using something else. If the user is allowed access, this variable should be set to null.
+      </param>
+    </ShouldDenyAccess>
+  </Common>
+  
+  <ConditionCode>
+    <Equals>
+      <summary>Determines whether this <see cref="ConditionCode"/> is equivalent to the given condition code.</summary>
+    </Equals>
+  </ConditionCode>
+
+  <CopyOrMoveRequest>
+    <ProcessStandardRequest>
+      <summary>
+        Implements standard processing for a <c>COPY</c> or <c>MOVE</c> request.
+      </summary>
+      <typeparam name="T">
+        The type of object used internally by the caller to represent its resources. This type parameter is provided for
+        the convenience of the caller, to avoid needing to cast back to the internal type in callback methods that accept resources.
+      </typeparam>
+      <param name="requestResource">
+        The object representing the <see cref="WebDAVContext.RequestResource"/>, which is to be copied or
+        moved.
+      </param>
+      <param name="deleteSource">
+        <para>
+          A function that accepts a source resource (of type <typeparamref name="T"/>) and deletes it if the user has access to do so. This
+          parameter is only used for <c>MOVE</c> operations, and is ignored for <c>COPY</c> operations. The deletion must fail with
+          <see cref="ConditionCodes.Forbidden"/> if the user does not have permission to delete the given resource. The result of the
+          operation should be returned as a <see cref="ConditionCode"/> as described by RFC 4918 section 9.9. This function is called only
+          if the resource was successfully copied, to delete the source resource and complete the move. The function does not need to
+          delete the dead properties or locks of the source resource, as that will be done automatically if the function returns a
+          successful status code (or null, which is assumed to be success). If you call an override that accepts a <c>createDest</c>
+          parameter and the <c>createDest</c> function is clever enough to do an actual move of the source resource rather than creating a
+          copy, then it is acceptable for this method to be a no-op (simply returning a success code).
+        </para>
+        <para>
+          If this parameter is null, the <see cref="IStandardResource.Delete"/> method of the source resource will be used.
+        </para>
+      </param>
+      <param name="createDest">
+        A function that has a similar signature to <see cref="IWebDAVService.CopyResource"/> except that the path
+        will be an absolute URL if the <see cref="DestinationInfo.Service"/> was not known. The function must perform a copy or move of
+        the source resource to the destination path if the user has access to write to the destination, and return a
+        <see cref="ConditionCode"/> as described by sections 9.8 and 9.9 of RFC 4918.
+        <para>
+          When servicing a <c>COPY</c> request, the function must attempt to create a copy of the source resource. When servicing a
+          <c>MOVE</c> request, the function may create a copy (after which <paramref name="deleteSource"/> is responsible for deleting the
+          source) or may directly move the source to the destination (in which case <paramref name="deleteSource"/> should be a no-op).
+          Dead properties must be copied or moved as well, along with selected live properties. (See <see cref="IWebDAVService.CopyResource"/>
+          for additional details. Locks are not transferred.) Normally these copies and moves are done non-recursively, relying on this method
+          to use <see cref="IStandardResource{T}.GetChildren"/> to recursively copy or move the descendants. (A non-recursive "move"
+          can be usually done by creating the destination object with the same attributes that it would have if it was moved, such as the same
+          creation date, but without any children.) However, as an optimization you may copy or move items recursively when <see cref="Depth"/>
+          is <see cref="Server.Depth.SelfAndDescendants"/>. In that case, <paramref name="getChildren"/> must not return any children, or else this
+          method will attempt to recursively invoke <paramref name="createDest"/> on them even though they have already been copied or moved by
+          the parent. Also, if you do a recursive copy or move, then the copy or move should succeed or fail as a unit. If the copy or move can
+          partially fail, then you should do it non-recursively and allow this method to handle the recursion, so that it can report errors
+          accurately. If you move items rather than copying them, then <paramref name="deleteSource"/> must be able to handle that, i.e. it
+          must not throw an exception or delete the newly moved resource.
+        </para>
+        <para>
+          If this parameter is null, the <see cref="IWebDAVService.CopyResource"/> method of <see cref="DestinationInfo.Service"/> will be
+          used. (If both <paramref name="createDest"/> and <see cref="DestinationInfo.Service"/> are null, an exception will be thrown.)
+          See <see cref="IWebDAVService.CopyResource"/> for additional details about how the parameters should be interpreted and how the
+          copy should be performed.
+        </para>
+      </param>
+      <param name="getChildren">
+        A function that accepts a source resource (of type <typeparamref name="T"/>) and returns the children of
+        the resource if it's a collection, or null if the resource has no children. If the function is null,
+        <see cref="IStandardResource{T}.GetChildren"/> will be used.
+      </param>
+      <remarks>
+        <note type="caution">
+          This method rejects attempts to copy or move the source resource to a descendant or ancestor of the
+          source resource if the attempt can be detected simply be examining the paths involved. However, this is not sufficient to detect all
+          such requests. It is possible that even if the destination refers to a different location than the source in URL space, it can refer
+          to overlapping locations in the underlying data store. For example, two WebDAV services at /root and /users could point to
+          overlapping parts of the same filesystem (e.g. C:\ and C:\Users). Another possibility is that the request
+          <see cref="WebDAVContext.Service"/> and destination <see cref="DestinationInfo.Service"/> happen to be different due to a rare
+          combination of an unusual <c>Destination</c> header and an error and race condition with another thread. (See
+          <see cref="DestinationInfo.Service"/> for details.) The <see cref="IWebDAVResource"/> that processes this request is responsible for
+          making sure that it either disallows copies/moves from the request resource to a descendant of the request resource (such as copying
+          or moving C:\Foo to C:\Foo\Bar\Baz), or that it can handle such operations correctly. (Copies to a descendant or ancestor and moves
+          to an ancestor are possible, but care must be taken to avoid data loss or infinite recursion; moves to a descendant are impossible
+          and must be rejected, because they would result in an inconsistent URL namespace.)
+        </note>
+      </remarks>
+    </ProcessStandardRequest>
+  </CopyOrMoveRequest>
+
+  <EntityTag>
+    <ctor>
+      <summary>Initializes a new <see cref="EntityTag"/>.</summary>
+      <param name="isWeak">
+        If false, this represents a strong entity tag, where entities may have the same tag only if they are byte-for-byte identical. If
+        true, this represents a weak entity tag, where entities may have the same tag as long as they could be swapped with no significant
+        change in semantics.
+      </param>
+    </ctor>
+  </EntityTag>
+
+  <IAuthorizationFilter>
+    <CanDeleteLock>
+      <include file="documentation.xml" path="/DAV/IWebDAVService/CanDeleteLock/node()" />
+      <returns>
+        This method should return true if the user identified by <see cref="WebDAVContext.CurrentUserId"/> can delete the lock created by
+        <see cref="ActiveLock.OwnerId"/>, false if it cannot, and null if the authorization filter has no opinion on the matter, in which
+        case the decision will be delegated to other authorization filters or the <see cref="IWebDAVService"/> itself. The first
+        authorization filter to return a non-null value will decide the matter.
+      </returns>
+    </CanDeleteLock>
+    <GetCurrentUserId>
+      <summary>
+        Attempts to retrieve the ID of the user making the current request. The ID should be null if the user is unknown or
+        anonymous.
+      </summary>
+      <param name="context">
+        The <see cref="WebDAVContext"/> of the current request.
+      </param>
+      <param name="currentUserId">A variable that should receive the current user ID, if it could be determined.</param>
+      <include file="documentation.xml" path="/DAV/IWebDAVService/GetCurrentUserId/remarks" />
+      <returns>
+        This method should return true if it determined the current user ID, and false if it wants to delegate the question to
+        later authentication filters or to the <see cref="IWebDAVService"/> itself.
+      </returns>
+    </GetCurrentUserId>
+    <ShouldDenyAccess>
+      <summary>Determines whether the user making a request should be denied access to a resource related to the request.</summary>
+      <param name="context">The <see cref="WebDAVContext"/> in which the request is executing.</param>
+      <param name="service">
+        The <see cref="IWebDAVService"/> containing the resource to which access is being checked. This is not
+        necessarily the same as <see cref="WebDAVContext.Service"/>.
+      </param>
+      <param name="resource">
+        The <see cref="IWebDAVResource"/> to which access is being checked. This is not necessarily the same as
+        <see cref="WebDAVContext.RequestResource"/>, but if this parameter is null then access is being checked against
+        <see cref="WebDAVContext.RequestPath"/>.
+      </param>
+      <include file="documentation.xml" path="/DAV/Common/ShouldDenyAccess/node()" />
+      <returns>
+        True if the user should be denied access, or false if the user may be permitted access. The user will be allowed access only
+        if the resource and all authentication filters agree.
+      </returns>
+      <remarks>
+        Note that the <see cref="WebDAVContext.RequestResource"/> property will be null if the request was made to an unmapped URL. In
+        general, if you don't understand <paramref name="access"/> you should treat it as though it was null.
+      </remarks>
+    </ShouldDenyAccess>
+  </IAuthorizationFilter>
+
+  <IElementValue>
+    <GetNamespaces>
+      <summary>
+        Returns the XML namespaces used by the property value, or null if the value does not use any namespaces. It is not necessary
+        to include the <c>DAV:</c> namespace.
+      </summary>
+    </GetNamespaces>
+    <WriteValue>
+      <summary>
+        Writes the value into XML. Any namespaces used by the value will already have been defined in the enclosing context, so no
+        new <c>xmlns</c> attributes should be added.
+      </summary>
+    </WriteValue>
+  </IElementValue>
+
+  <ILockManager>
+    <AddLock>
+      <summary>Adds a new resource lock if no conflicting lock exists.</summary>
+      <param name="canonicalPath">The canonical, relative path to the resource to lock.</param>
+      <param name="type">The type of lock to add.</param>
+      <param name="selection">
+        A <see cref="LockSelection"/> value that determines the set of locks to be checked for conflict with the new lock and also
+        determines the scope of the new lock. If the selection contains the <see cref="LockSelection.Descendants"/> flag, the lock
+        will be created as a recursive lock that implicitly locks its descendants. Otherwise, it will be a non-recursive lock that
+        only locks the resource named by <paramref name="canonicalPath"/>. In general, a recursive lock should use
+        <see cref="LockSelection.RecursiveUpAndDown"/> and a non-recursive lock should use
+        <see cref="LockSelection.SelfAndRecursiveAncestors" />.
+      </param>
+      <param name="timeoutSeconds">
+        The requested timeout before the lock expires, in seconds, or zero if the lock should not expire, or null to use the default
+        lock timeout. The lock manager may override the timeout specified.
+      </param>
+      <param name="ownerId">
+        The ID of the user that is creating the lock, as returned by <see cref="WebDAVContext.CurrentUserId"/>. This
+        may be null if the user is anonymous.
+      </param>
+      <param name="ownerData">
+        An <see cref="XmlElement"/> containing the <c>DAV:owner</c> element supplied by the client with the lock request, or null if no
+        <c>owner</c> element was supplied.
+      </param>
+      <param name="serverData">
+        An <see cref="XmlElement"/> containing arbitrary data the server wishes to associated with the lock, or null if no additional data
+        is to be associated with the lock.
+      </param>
+      <returns>An <see cref="ActiveLock"/> object representing the newly-added lock.</returns>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="canonicalPath"/> is null.</exception>
+      <exception cref="ArgumentException">Thrown if <paramref name="canonicalPath"/> is not relative.</exception>
+      <exception cref="LockConflictException">Thrown if there is a conflict with an existing lock.</exception>
+      <exception cref="LockLimitReachedException">Thrown if adding the lock would cause a lock limit to be exceeded.</exception>
+    </AddLock>
+    <GetConflictingLocks>
+      <summary>Returns a collection of existing locks that conflict with the given proposed lock.</summary>
+      <param name="canonicalPath">The canonical, relative path to the resource to propose to lock.</param>
+      <param name="type">The proposed type of lock to add.</param>
+      <param name="selection">
+        A <see cref="LockSelection"/> value that describes the set of locks to be checked for conflict with the new lock. In general, a
+        recursive lock should use <see cref="LockSelection.RecursiveUpAndDown"/> and a non-recursive lock should use
+        <see cref="LockSelection.SelfAndRecursiveAncestors" />.
+      </param>
+      <param name="ownerId">
+        The ID of the user that would own lock, as returned by <see cref="WebDAVContext.CurrentUserId"/>. This may be null if the user
+        is anonymous.
+      </param>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="canonicalPath"/> or <paramref name="type"/> is null.</exception>
+      <exception cref="ArgumentException">Thrown if <paramref name="canonicalPath"/> is not relative.</exception>
+    </GetConflictingLocks>
+    <GetLock>
+      <summary>Returns the <see cref="ActiveLock"/> with the specified lock token and path, or null if no matching lock exists.</summary>
+      <param name="lockToken">The lock token of the lock to retrieve.</param>
+      <param name="canonicalPath">If specified, the lock must also contain the given path within its scope. If null, only the lock token
+      must match. This should be the canonical, relative path to a resource.
+      </param>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="lockToken"/> is null.</exception>
+      <exception cref="ArgumentException">Thrown if <paramref name="canonicalPath"/> is specified but not relative.</exception>
+    </GetLock>
+    <GetLocks>
+      <summary>Returns the locks at, above, and/or below a resource in the URL hierarchy.</summary>
+      <param name="canonicalPath">The canonical, relative path to the resource whose locks will be returned.</param>
+      <param name="selection">The <see cref="LockSelection"/> value that determines whether to return locks on the named resource, its
+        parent, its ancestors, and/or its descendants.
+      </param>
+      <param name="filter">If not null, only locks for which the filter predicate returns true will be returned from the method.</param>
+      <returns>
+        Returns a list of the locks applied to the given resource, its parent, its ancestors, and/or its descendants, depending on
+        <paramref name="selection"/>. All locks will be filtered through <paramref name="filter"/> if <paramref name="filter"/> is not
+        null.
+      </returns>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="canonicalPath"/> is null.</exception>
+      <exception cref="ArgumentException">Thrown if <paramref name="canonicalPath"/> is not relative.</exception>
+    </GetLocks>
+    <RefreshLock>
+      <summary>Refreshes the given lock timeout. Returns true if the lock timeout was refreshed and false if it was not.</summary>
+      <param name="activeLock">The lock whose timeout should be refreshed.</param>
+      <param name="timeoutSeconds">
+        The requested timeout before the lock expires, in seconds, or zero if the lock should not expire, or
+        null to use the previous timeout value. The lock manager may override the timeout value specified.
+      </param>
+      <remarks>
+        The lock manager is not required to refresh any lock. False may be returned if the lock manager declines to refresh the
+        lock, or if the lock does not exist in the lock manager.
+      </remarks>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="activeLock"/> is null.</exception>
+    </RefreshLock>
+    <RemoveLock>
+      <summary>Removes the given lock. Returns true if the lock was removed and false if the lock did not exist in the lock manager.</summary>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="activeLock"/> is null.</exception>
+    </RemoveLock>
+    <RemoveLocks>
+      <summary>Removes all locks at (and possibly below) a resource in the URL hierarchy. Returns true if the locks were removed
+        successfully and false if the locks could not be removed.
+      </summary>
+      <param name="canonicalPath">The canonical, relative path to the resource whose locks will be removed.</param>
+      <param name="removal">A <see cref="LockRemoval"/> value that specifies which locks will be removed.</param>
+      <returns>
+        If <paramref name="removal"/> is <see cref="LockRemoval.RequireEmpty"/> and descendant locks exist, no locks are removed and false
+        is returned. Otherwise, all locks are removed and true is returned.
+      </returns>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="canonicalPath"/> is null.</exception>
+      <exception cref="ArgumentException">Thrown if <paramref name="canonicalPath"/> is not relative.</exception>
+    </RemoveLocks>
+  </ILockManager>
+
+  <IPropertyStore>
+    <ClearProperties>
+      <summary>Removes all dead properties associated with a resource.</summary>
+      <param name="canonicalPath">The canonical, relative path to the resource whose properties will be removed.</param>
+      <param name="recursive">
+        If true, the properties of descendant resources will be cleared as well. This parameter should generally be true unless it is
+        impossible for the resource to have descendants.
+      </param>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="canonicalPath"/> is null.</exception>
+      <exception cref="ArgumentException">Thrown if <paramref name="canonicalPath"/> is not relative.</exception>
+    </ClearProperties>
+    <GetProperties>
+      <summary>Returns a dictionary containing all dead properties associated with a resource.</summary>
+      <param name="canonicalPath">The canonical, relative path to the resource whose properties will be returned.</param>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="canonicalPath"/> is null.</exception>
+      <exception cref="ArgumentException">Thrown if <paramref name="canonicalPath"/> is not relative.</exception>
+    </GetProperties>
+    <RemoveProperties>
+      <summary>Returns dead properties associated with a resource.</summary>
+      <param name="canonicalPath">The canonical, relative path to the resource whose properties will be removed.</param>
+      <param name="propertyNames">A set of property names to remove.</param>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="canonicalPath"/> or <paramref name="propertyNames"/> is null.</exception>
+      <exception cref="ArgumentException">
+        Thrown if <paramref name="canonicalPath"/> is not relative or if <paramref name="propertyNames"/> contains a null reference.
+      </exception>
+    </RemoveProperties>
+    <SetProperties>
+      <summary>
+        Associates dead properties with a resource. This method will overwrite existing properties with the same name, and other
+        existing properties may or may not be removed, depending on the value of the <paramref name="removeExisting"/> parameter.
+      </summary>
+      <param name="canonicalPath">The canonical, relative path to the resource whose properties will be set.</param>
+      <param name="properties">A collection of dead properties to add.</param>
+      <param name="removeExisting">
+        If true, all existing properties will be replaced by those in <paramref name="properties"/>. If false, the properties in
+        <paramref name="properties"/> will be merged with the existing properties, replacing existing properties with the same name.
+      </param>
+      <exception cref="ArgumentNullException">Thrown if <paramref name="canonicalPath"/> or <paramref name="properties"/> is null.</exception>
+      <exception cref="ArgumentException">
+        Thrown if <paramref name="canonicalPath"/> is not relative or if <paramref name="properties"/> contains a null value.
+      </exception>
+    </SetProperties>
+  </IPropertyStore>
+  
+  <IWebDAVResource>
+    <CanonicalPath>
+      <summary>Gets the canonical path to this resource, relative to the <see cref="WebDAVContext.ServiceRoot"/>.</summary>
+      <remarks>
+        <para>
+          Since it's relative, the path must not begin with a slash. The path for a collection resource should end with a slash, but not if
+          it would result in the path beginning with a slash. (The canonical relative path to the root resource is the empty string.) Since
+          it's canonical, the path must not contain any unnecessarily encoded characters. In particular, you should not use the URL
+          encoding methods of <see cref="System.Web.HttpUtility"/> or <see cref="T:System.Net.WebUtility"/> to construct the path, since
+          they encode characters unnecessarily and so do not produce a canonical path. You can normally use
+          <see cref="DAVUtility.CanonicalSegmentEncode"/> or <see cref="DAVUtility.CanonicalPathEncode"/> to perform the encoding.
+        </para>
+        <para>
+          If the service treats paths case-insensitively, this method must also normalize the case (e.g. to all uppercase or lowercase), so
+          that canonical URLs can be safely compared case-sensitively.
+        </para>
+      </remarks>
+    </CanonicalPath>
+    <CopyOrMove>
+      <summary>Executes a <see cref="CopyOrMoveRequest"/>.</summary>
+      <remarks>
+        All DAV-compliant resources must support the <c>COPY</c> and <c>MOVE</c> methods (i.e. they cannot respond with
+        405 Method Not Allowed), although they can disable copies and moves by responding with 403 Forbidden.
+      </remarks>
+    </CopyOrMove>
+    <Delete>
+      <summary>Executes a <see cref="DeleteRequest"/>.</summary>
+    </Delete>
+    <GetEntityMetadata>
+      <summary>Returns an <see cref="EntityMetadata"/> object describing the resource's entity body.</summary>
+      <param name="includeEntityTag">
+        If true, the resource's <see cref="EntityTag"/> should be included in the metadata if possible. (Failure to include it may cause
+        requests to fail.) If false, the <see cref="EntityTag"/> should only be included if it can be efficiently obtained.
+      </param>
+      <remarks>
+        <note type="caution">
+          Because <see cref="EntityMetadata"/> is a mutable object, implementors are recommended to use <see cref="EntityMetadata.Clone"/>
+          to return a copy of the metadata if the metadata is cached between invocations.
+        </note>
+      </remarks>
+    </GetEntityMetadata>
+    <GetOrHead>
+      <summary>Executes a <see cref="GetOrHeadRequest"/>.</summary>
+    </GetOrHead>
+    <HandleGenericRequest>
+      <summary>
+        Called to handle a request that is not handled by any other another method, i.e. a request using an unrecognized HTTP verb.
+      </summary>
+      <returns>
+        The method must return true if it responded to the request and false otherwise, in which case the <see cref="IWebDAVService"/>
+        will be allowed to handle the request.
+      </returns>
+    </HandleGenericRequest>
+    <Lock>
+      <summary>Executes a <see cref="LockRequest"/>.</summary>
+    </Lock>
+    <Options>
+      <summary>Executes an <see cref="OptionsRequest"/>.</summary>
+    </Options>
+    <Post>
+      <summary>Executes a <see cref="PostRequest"/>.</summary>
+    </Post>
+    <PropFind>
+      <summary>Executes a <see cref="PropFindRequest"/>.</summary>
+      <remarks>
+        All DAV-compliant resources must support the <c>PROPFIND</c> method (i.e. they cannot respond with
+        405 Method Not Allowed). See the <see cref="PropFindRequest"/> documentation for details on how to service it.
+      </remarks>
+    </PropFind>
+    <PropPatch>
+      <summary>Executes a <see cref="PropPatchRequest"/>.</summary>
+    </PropPatch>
+    <PropPatchRemarks>
+      <remarks>
+        All DAV-compliant resources must support the <c>PROPPATCH</c> method (i.e. they cannot respond with 405 Method Not Allowed),
+        although they can disable property setting by responding with 403 Forbidden (either for the request as a whole or for individual
+        properties). Resources should allow the setting of arbitrary (dead) properties, even if the resource content is read-only.
+      </remarks>
+    </PropPatchRemarks>
+    <Put>
+      <summary>Executes a <see cref="PutRequest"/>.</summary>
+    </Put>
+    <ShouldDenyAccess>
+      <summary>Determines whether the user should be denied access to a resource related to the current request.</summary>
+      <param name="context">The <see cref="WebDAVContext"/> in which the request is executing.</param>
+      <param name="service">The <see cref="IWebDAVService"/> containing the resource. This is not necessarily the same as
+        <see cref="WebDAVContext.Service"/>.
+      </param>
+      <include file="documentation.xml" path="/DAV/Common/ShouldDenyAccess/node()" />
+      <returns>
+        True if the user should be denied access, or false if the user may be permitted access. The user will be allowed access only
+        if the resource and all authentication filters agree. In general, if you don't understand <paramref name="access"/>, you should
+        treat it as though it was null.
+      </returns>
+    </ShouldDenyAccess>
+    <Unlock>
+      <summary>Executes an <see cref="UnlockRequest"/>.</summary>
+    </Unlock>
+  </IWebDAVResource>
+
+  <IWebDAVService>
+    <CanDeleteLock>
+      <summary>Determines whether a user can delete a lock held by another user (or potentially the same user).</summary>
+      <param name="context">
+        The <see cref="WebDAVContext"/> of the request. The ID of the user that wants to delete the lock is accessible from
+        <see cref="WebDAVContext.CurrentUserId"/>.
+      </param>
+      <param name="lockObject">
+        The <see cref="ActiveLock"/> object representing the lock that may be deleted. The ID of the user that owns the lock is accessible
+        from <see cref="ActiveLock.OwnerId"/>.
+      </param>
+    </CanDeleteLock>
+    <CopyResource>
+      <summary>Creates a new resource in response to a <c>COPY</c> or <c>MOVE</c> request.</summary>
+      <param name="request">
+        <para>
+          A <see cref="CopyOrMoveRequest"/> representing the client's request. Note that the request relates to the request resource
+          and thus the source service, but this method is called on the destination service.
+        </para>
+        <para>
+          <see cref="CopyOrMoveRequest.IsMove"/> determines whether the resource is being moved to the new location. This may affect which
+          properties are copied from the source resource. For example, if a resource is copied it might receive a new creation date,
+          whereas if it is moved the creation date may be preserved. (The preservation of the last modification date is more complex; see
+          the remarks.) This should not cause the method to actually perform a move instead of a copy, i.e. the method must not attempt to
+          remove the <paramref name="sourceResource"/>.
+        </para>
+        <para>
+          <see cref="CopyOrMoveRequest.Overwrite"/> determines whether the source resource can overwrite the destination resource. If
+          false, a 412 <see cref="ConditionCodes.PreconditionFailed">Precondition Failed</see> status should be returned if a resource
+          already exists at the <paramref name="destinationPath"/>. If true, the destination resource should be overwritten. Usually this
+          is done by deleting the destination if it exists before the source resource is copied, as though a <c>DELETE</c> request was
+          issued (including deleting any existing locks and dead properties, which can be done by simply calling the
+          <see cref="CopyOrMoveRequest.PostProcessOverwrite"/> method), and this is the way that it must effectively be done if the request
+          is a move. If the request is a copy, the service may choose to effectively delete the existing resource and its properties before
+          the copy, or to merge properties from the source into the destination (so that source properties overwrite destination properties
+          with the same name, but other properties remain intact). After a successful recursive request, the members of any destination
+          collection must be the same as those of the corresponding source collection, regardless of whether the request was a copy or a
+          move. It is not valid behavior to merge the members of a source collection into a destination collection.
+        </para>
+      </param>
+      <param name="destinationPath">
+        The relative path at which the new resource should be created. For instance, if the source collection has a name of "a" and this
+        method is called with a destination path <c>/dest/b/</c>. This means that a new collection should be created at <c>/dest/b/</c>,
+        not <c>/dest/b/a/</c>. The path will be minimally escaped but not necessarily canonical and, for collection resources, may or may
+        not have a trailing slash.
+      </param>
+      <param name="sourceResource">
+        An <see cref="IStandardResource{T}"/> object that gives information about the source resource that is being copied or moved.
+      </param>
+      <returns>
+        Returns a status code in line with the processing requirements of the <c>COPY</c> and <c>MOVE</c> requests (and <c>DELETE</c> if
+        <see cref="CopyOrMoveRequest.Overwrite"/> is true) described in sections 9.8 and 9.9 of RFC 4918.
+      </returns>
+      <remarks>
+        <para>Even if <see cref="CopyOrMoveRequest.IsMove"/> is true, the resource should be copied, not moved, by this method.</para>
+        <para>
+          This method should create a non-recursive copy of the source resource, including its entity body and properties, excluding
+          properties that according to section 15 of RFC 4918 should not be preserved. The set of live properties preserved may vary
+          depending on the value of <see cref="CopyOrMoveRequest.IsMove"/>. All dead properties must be preserved if the destination
+          supports dead properties. (This should be done by simply calling the <see cref="CopyOrMoveRequest.PostProcessCopy"/> method.)
+          If the semantics (not necessarily the values) of any live properties cannot be preserved at the
+          destination, the method may choose to fail with <see cref="ConditionCodes.PreservedLiveProperties"/>, but in any case, live
+          properties from the source should generally not be transformed into dead properties at the destination. A service must be careful
+          if it wants to preserve the value of the <c>DAV:getlastmodified</c> property. According to RFC 4918 section 8.8, the modification
+          time must increase when the entity body for a URL changes, since clients may use it for cache validation. (Similarly,
+          <c>DAV:getetag</c> must change when the entity body changes.) However, because clients are required to use entity tags for cache
+          validation when available, a service that reliably and consistently reports entity tags to the client may be able to get away with
+          preserving the last modification time during a move. (This possibility is alluded to in RFC 4918 section 15.7.) Additionally, a
+          service should attempt to preserve all preservable live properties when servicing <c>MOVE</c> requests where
+          <see cref="CopyOrMoveRequest.Overwrite"/> is false, since that is the standard mechanism for renaming a resource and it is
+          expected that creation and modification dates, etc. will not change during a simple rename.
+        </para>
+        <para>
+          Locks on the source resource must not be copied or moved to the destination.
+        </para>
+        <para>
+          If <paramref name="sourceResource"/> is a collection resource, its members should not be copied or moved by this method. (An
+          <see cref="IWebDAVResource"/> or <see cref="CopyOrMoveRequest"/> may have special handling that facilitates direct copies or
+          moves of entire collection/directory trees between services, but this method should handle the general case of resources being
+          copied individually.)
+        </para>
+        <para>
+          Basic access checks should have already been performed for the source and destination paths by calling <c>ShouldDenyAccess</c>,
+          but if the current user does not have access to modify the <paramref name="destinationPath"/>,
+          <see cref="ConditionCodes.Forbidden"/> or <see cref="ConditionCodes.Unauthorized"/> should be returned.
+        </para>
+        <para>See also RFC 4918 section 8.8.</para>
+        <note type="caution">
+          The destination path will already have had unnecessary URL escape codes removed from it (i.e. it will be minimally escaped), but
+          you will probably need to decode the remaining URL escape codes (using <see cref="DAVUtility.UriPathDecode"/>) before passing the
+          path to underlying data access APIs. You should also reject paths containing encoded slashes (i.e. "%2F"), unless you are careful
+          to avoid the problems they can cause. (Consider a path of <c>secretDir%2Ffile</c>, which passes security checks but then decodes
+          into <c>secretDir/file</c>.)
+        </note>
+      </remarks>
+    </CopyResource>
+    <CreateAndLock>
+      <summary>Executes a <see cref="LockRequest"/> against an unmapped URL to create and lock a new non-collection resource there.</summary>
+      <remarks>
+        <note type="caution">
+          The request path will already have had unnecessary URL escape codes removed from it (i.e. it will be minimally escaped), but you
+          will probably need to decode the remaining URL escape codes (using <see cref="DAVUtility.UriPathDecode"/>) before passing the
+          path to underlying data access APIs. You should also reject paths containing encoded slashes (i.e. "%2F"), unless you are careful
+          to avoid the problems they can cause. (Consider a path of <c>secretDir%2Ffile</c>, which passes security checks but then decodes
+          into <c>secretDir/file</c>.)
+        </note>
+      </remarks>
+    </CreateAndLock>
+    <CreateCopyOrMove>
+      <summary>
+        Creates a new <see cref="CopyOrMoveRequest"/> object (or an object of a derived type) to serve a <c>COPY</c> or <c>MOVE</c>
+        request.
+      </summary>
+    </CreateCopyOrMove>
+    <CreateDelete>
+      <summary>Creates a new <see cref="DeleteRequest"/> object (or an object of a derived type) to serve a <c>DELETE</c> request.</summary>
+    </CreateDelete>
+    <CreateGetOrHead>
+      <summary>
+        Creates a new <see cref="GetOrHeadRequest"/> object (or an object of a derived type) to serve a <c>GET</c> or <c>HEAD</c> request.
+      </summary>
+    </CreateGetOrHead>
+    <CreateLock>
+      <summary>Creates a new <see cref="LockRequest"/> object (or an object of a derived type) to serve a <c>LOCK</c> request.</summary>
+    </CreateLock>
+    <CreateMkCol>
+      <summary>Creates a new <see cref="MkColRequest"/> object (or an object of a derived type) to serve a <c>MKCOL</c> request.</summary>
+    </CreateMkCol>
+    <CreateOptions>
+      <summary>Creates a new <see cref="OptionsRequest"/> object (or an object of a derived type) to serve an <c>OPTIONS</c> request.</summary>
+    </CreateOptions>
+    <CreatePost>
+      <summary>Creates a new <see cref="PostRequest"/> object (or an object of a derived type) to serve a <c>POST</c> request.</summary>
+    </CreatePost>
+    <CreatePropFind>
+      <summary>Creates a new <see cref="PropFindRequest"/> object (or an object of a derived type) to serve a <c>PROPFIND</c> request.</summary>
+    </CreatePropFind>
+    <CreatePropPatch>
+      <summary>Creates a new <see cref="PropPatchRequest"/> object (or an object of a derived type) to serve a <c>PROPPATCH</c> request.</summary>
+    </CreatePropPatch>
+    <CreatePut>
+      <summary>Creates a new <see cref="PutRequest"/> object (or an object of a derived type) to serve a <c>PUT</c> request.</summary>
+    </CreatePut>
+    <CreateUnlock>
+      <summary>Creates a new <see cref="UnlockRequest"/> object (or an object of a derived type) to serve an <c>UNLOCK</c> request.</summary>
+    </CreateUnlock>
+    <GetCanonicalUnmappedPath>
+      <summary>Given an unmapped path relative to the service's root, returns the canonical version of that path.</summary>
+      <param name="context">The <see cref="WebDAVContext"/> for the request.</param>
+      <param name="relativePath">
+        A relative path that did not resolve to any resource, relative to the service's root. This path will already have had
+        unnecessary URL escape codes removed from it (i.e. it will be minimally escaped).
+      </param>
+      <remarks>
+        This method should canonicalize the URL in the same way as <see cref="IWebDAVResource.CanonicalPath"/>, at least as much as
+        possible. For instance, if the given path is <c>/dir/subdir/file</c>, which doesn't exist, but <c>/dir</c> does exist, this method
+        should return the same URL that would be returned if a new collection called "subdir" was created under <c>/dir</c> by a
+        <c>MKCOL</c> request, and then a new file called "file" was created under <c>/dir/subdir</c> by a <c>PUT</c> request, and then the
+        canonical URL of the new <c>/dir/subdir/file</c> resource was queried. (Similarly, <c>/dir/a/b/</c> would return the same URL as if
+        two new subcollections were creating using <c>MKCOL /dir/a/</c> and <c>MKCOL /dir/a/b/</c>. The trailing slash implies that <c>b</c>
+        is a collection rather than a file.) If <c>/dir</c> exists and has a canonical path of <c>/Resources/Dir/</c>, this method might
+        return <c>/Resources/Dir/subdir/file</c> for the original example. If this is impossible, for instance because canonical URLs are
+        based on autogenerated IDs from a database, the method should canonicalize the URL as much as possible. If the service treats paths
+        case-insensitively, this method must also normalize the case of the path (for instance to all uppercase), so that canonical
+        URLs can be safely compared case-sensitively. See <see cref="IWebDAVResource.CanonicalPath"/> for additional requirements.
+        <note type="caution">
+          <paramref name="relativePath"/> will already have had unnecessary URL escape codes removed from it (i.e. it will be minimally
+          escaped), but you will probably need to decode the remaining URL escape codes (using <see cref="DAVUtility.UriPathDecode"/>)
+          before passing the path to underlying data access APIs. You should also reject paths containing encoded slashes (i.e. "%2F"),
+          unless you are careful to avoid the problems they can cause. (Consider a path of <c>secretDir%2Ffile</c>, which passes security
+          checks but then decodes into <c>secretDir/file</c>.)
+        </note>
+      </remarks>
+    </GetCanonicalUnmappedPath>
+    <GetCurrentUserId>
+      <summary>Returns the ID of the user making the current request, or null if the user is unknown or anonymous.</summary>
+      <remarks>
+        User IDs are case-sensitive strings that uniquely identify a user. Because user IDs should be unique across authentication
+        services, they should be prefixed with the authentication scheme - the usual format is <c>authScheme:userName</c> - unless you have
+        a mechanism to match users across services.
+      </remarks>
+    </GetCurrentUserId>
+    <HandleGenericRequest>
+      <summary>
+        Called to handle a request that is not handled by any other another method, i.e. a request using an unrecognized HTTP verb.
+      </summary>
+      <returns>
+        The method must return true if it responded to the request and false otherwise, in which case the server will generate a default
+        response.
+      </returns>
+      <remarks>
+        If the request URL maps to a resource, <see cref="IWebDAVResource.HandleGenericRequest"/> will be called on the resource first to
+        give the resource a chance to handle the request. This method will only be called if the URL does not map to a resource or the
+        resource declines to handle the request.
+      </remarks>
+    </HandleGenericRequest>
+    <MakeCollection>
+      <summary>
+        Executes a <see cref="MkColRequest"/>. All DAV-compliant services must support the <c>MKCOL</c> method (i.e. they cannot
+        respond with 405 Method Not Allowed), although they can disable collection creation by responding with 403 Forbidden.
+      </summary>
+      <remarks>
+        <note type="caution">
+          The request path will already have had unnecessary URL escape codes removed from it (i.e. it will be minimally escaped), but you
+          will probably need to decode the remaining URL escape codes (using <see cref="DAVUtility.UriPathDecode"/>) before passing the
+          path to underlying data access APIs. You should also reject paths containing encoded slashes (i.e. "%2F"), unless you are careful
+          to avoid the problems they can cause. (Consider a path of <c>secretDir%2Ffile</c>, which passes security checks but then decodes
+          into <c>secretDir/file</c>.)
+        </note>
+      </remarks>
+    </MakeCollection>
+    <Options>
+      <summary>Executes an <see cref="OptionsRequest"/> that either doesn't relate specific resource or relates to a nonexistent resource.</summary>
+    </Options>
+    <Post>
+      <summary>Executes a <see cref="PostRequest"/> on an unmapped URL.</summary>
+    </Post>
+    <Put>
+      <summary>Executes a <see cref="PutRequest"/> on an unmapped URL.</summary>
+    </Put>
+    <ResolveResource>
+      <summary>
+        Resolves the given resource path to the corresponding <see cref="IWebDAVResource"/>, or returns null if the path does not map to
+        any resource.
+      </summary>
+      <param name="context">The <see cref="WebDAVContext"/> for the request. See the remarks for important details.</param>
+      <param name="resourcePath">
+        The relative path to the resource. This path is relative to the root of this service, but that may not match
+        <see cref="WebDAVContext.ServiceRoot"/> (since this service may not equal <see cref="WebDAVContext.Service"/>).
+        See the remarks for more details.
+      </param>
+      <remarks>
+        <note type="caution">
+          Although <paramref name="context"/> is the context for the current request, it will not necessarily correspond to this
+          service. In particular, <see cref="WebDAVContext.RequestPath"/> may not match <paramref name="resourcePath"/> and
+          <see cref="WebDAVContext.ServiceRoot"/> may not be the root of this service or the base of
+          <paramref name="resourcePath"/>. This will happen when one service attempts to resolve a URL belonging to another service, for
+          example when processing a cross-service <c>COPY</c> request or when the client submits a tagged <c>If</c> header specifying a URL
+          belonging to another service. Therefore, the implementation of this method should be careful about relying on request-specific
+          details to perform the resolution.
+        </note>
+        <note type="caution">
+          <paramref name="resourcePath"/> will already have had unnecessary URL escape codes removed from it (i.e. it will be minimally
+          escaped), but you will probably need to decode the remaining URL escape codes (using <see cref="DAVUtility.UriPathDecode"/>)
+          before passing the path to underlying data access APIs. You should also reject paths containing encoded slashes (i.e. "%2F"),
+          unless you are careful to avoid the problems they can cause. (Consider a path of <c>secretDir%2Ffile</c>, which passes security
+          checks but then decodes into <c>secretDir/file</c>.)
+        </note>
+      </remarks>
+    </ResolveResource>
+    <ShouldDenyAccess1>
+      <summary>Determines whether the user making a request should be denied access to the request resource.</summary>
+      <param name="context">The <see cref="WebDAVContext"/> in which the request is executing.</param>
+      <param name="authFilters">
+        A collection of <see cref="IAuthorizationFilter"/> objects that should be consulted in addition to the
+        <see cref="WebDAVContext.RequestResource"/>, or null if there are no authorization filters.
+      </param>
+      <include file="documentation.xml" path="/DAV/Common/ShouldDenyAccess/param[@name='response']" />
+      <returns>
+        True if the user should be denied access, or false if the user may be permitted access. The user should be allowed access only
+        if the request resource and all authentication filters agree.
+      </returns>
+      <remarks>
+        The access check should be made against the <see cref="WebDAVContext.RequestResource"/>, which will be null if the request was made
+        to an unmapped URL. This method is called by the <see cref="WebDAVModule"/> before any request processing has been done and is
+        responsible for determining the type of initial access check(s) to use for the request.
+      </remarks>
+    </ShouldDenyAccess1>
+    <ShouldDenyAccess2>
+      <summary>Determines whether the user making a request should be denied access to a resource related to the request.</summary>
+      <param name="context">
+        The <see cref="WebDAVContext"/> in which the request is executing.
+      </param>
+      <param name="resource">
+        The <see cref="IWebDAVResource"/> to which access is being checked. This is not necessarily the same as
+        <see cref="WebDAVContext.RequestResource"/>, but if this parameter is null then access is being checked against
+        <see cref="WebDAVContext.RequestPath"/>.
+      </param>
+      <param name="authFilters">
+        A collection of <see cref="IAuthorizationFilter"/> objects that should be consulted in addition to the
+        <see cref="WebDAVContext.RequestResource"/>, or null if there are no authorization filters.
+      </param>
+      <include file="documentation.xml" path="/DAV/Common/ShouldDenyAccess/node()" />
+      <returns>
+        True if the user should be denied access, or false if the user may be permitted access. The user should be allowed access only
+        if the resource and all authentication filters agree.
+      </returns>
+    </ShouldDenyAccess2>
+    <Unlock>
+      <summary>Executes an <see cref="UnlockRequest"/> against an unmapped URL.</summary>
+      <remarks>
+        <c>UNLOCK</c> requests may be made against unmapped URLs in the case that a resource is locked and then later deleted from outside
+        the WebDAV service. (For instance, a file on disk may be locked through WebDAV but later deleted by a user from the shell.)
+        Allowing <c>UNLOCK</c> requests on unmapped URLs provides a way for these dangling locks to be released.
+      </remarks>
+    </Unlock>
+  </IWebDAVService>
+
+  <LockManager>
+    <Dispose>
+      <summary>Called to dispose the lock manager.</summary>
+      <param name="manualDispose">False if the method was called from the finalizer and true if not.</param>
+      <remarks>This method should be overriden by derived lock managers to flush lock data to persistent storage.</remarks>
+    </Dispose>
+    <OnLockAdded>
+      <summary>Called after a lock has been added to the lock manager.</summary>
+      <param name="newLock">The new lock.</param>
+      <remarks>
+        <note type="caution">
+          The lock manager remains locked while this method is called, so the method should not perform slow operations such
+          as accessing a disk, database, or network service. It's recommended to perform such operations asynchronously.
+        </note>
+      </remarks>
+    </OnLockAdded>
+    <OnLockRemoved>
+      <summary>Called after a lock has been removed from the lock manager.</summary>
+      <param name="lockObject">The lock that was removed.</param>
+      <remarks>
+        <note type="caution">
+          The lock manager remains locked while this method is called, so the method should not perform slow operations such
+          as accessing a disk, database, or network service. It's recommended to perform such operations asynchronously.
+        </note>
+        This method may be called any time an expired lock is discovered and removed, including during calls to methods such as
+        <see cref="LockManager.GetAllLocks"/>. The implementation of <see cref="OnLockRemoved"/> must therefore be reentrant if it calls
+        any lock manager methods that access locks.
+      </remarks>
+    </OnLockRemoved>
+    <OnLockUpdated>
+      <summary>Called after a lock has been updated by the lock manager, usually to refresh it.</summary>
+      <param name="lockObject">The lock that was updated.</param>
+      <remarks>
+        <note type="caution">
+          The lock manager remains locked while this method is called, so the method should not perform slow operations such
+          as accessing a disk, database, or network service. It's recommended to perform such operations asynchronously.
+        </note>
+      </remarks>
+    </OnLockUpdated>
+  </LockManager>
+
+  <LockRequest>
+    <ProcessStandardRequest>
+      <param name="supportedLocks">A collection of the lock types supported by the resource. If null, all lock types will be allowed.</param>
+      <param name="canonicalPath">
+        The canonical, relative path of the resource to lock. If null, the path to the <see cref="WebDAVContext.RequestResource"/> will
+        be used, if it's available. If null and the request resource is not available, an exception will be thrown.
+      </param>
+      <param name="metadata">
+        The <see cref="EntityMetadata"/> of the resource. If null, the metadata will be retrieved by calling
+        <see cref="IWebDAVResource.GetEntityMetadata"/> on the <see cref="WebDAVContext.RequestResource"/> if it's needed and the request
+        resource is available.
+      </param>
+      <param name="supportsRecursiveLocks">
+        True if the resource supports recursive locks and false if not. Typically, this should be true for collection resources and false
+        for non-collection resources.
+      </param>
+      <param name="createFile">
+        A function that should create a new file at the <see cref="WebDAVContext.RequestPath"/> and return a <see cref="ConditionCode"/>
+        indicating whether the attempt succeeded or failed, or null for the standard success code. This function is called if
+        <see cref="WebDAVContext.RequestResource"/> is null and the client wants to create a new lock.
+      </param>
+      <remarks>
+        You can set the <see cref="ServerData"/> property before calling this method to specify additional information that will be
+        associated with any new lock created by this method. (It will not affect a lock that's merely being refreshed.)
+      </remarks>
+    </ProcessStandardRequest>
+  </LockRequest>
+
+  <PropPatchRequest>
+    <ProcessStandardRequest>
+      <summary>
+        Performs standard processing of a <c>PROPPATCH</c> request.
+      </summary>
+      <param name="canonicalPath">
+        The canonical, relative path of the resource whose properties will be modified. If null, the path to the
+        <see cref="WebDAVContext.RequestResource"/> will be used, if it's available. If null and the request resource is not available, an
+        exception will be thrown.
+      </param>
+      <param name="protectedProperties">
+        A set of properties that the client is not allowed to set, in addition to those that are required
+        to be protected by the WebDAV protocol. If null, only the minimum set of properties will be protected (but you can also use
+        <paramref name="canSetProperty"/> and <paramref name="canRemoveProperty"/> to restrict access to protected properties).
+      </param>
+      <param name="canSetProperty">
+        A function that takes a property name and value, and determines whether the service can set the named
+        property to that value. If the function returns a <see cref="ConditionCode"/> indicating an error, the property will not be set.
+        If the function returns a <see cref="ConditionCode"/> indicating success (typically <see cref="ConditionCodes.OK"/>), that
+        represents a promise that a subsequent call to <paramref name="setProperty"/> will succeed. If the function returns null, that
+        indicates that the named property is not handled by the service, in which case if the name does not have the WebDAV namespace it
+        will be considered to be a dead property. If the function is null, only dead properties can be set.
+      </param>
+      <param name="canRemoveProperty">
+        A function that takes a property name and determines whether the service can removed the named
+        property. If the function returns a <see cref="ConditionCode"/> indicating an error, the property will not be removed. If the
+        function returns a <see cref="ConditionCode"/> indicating success (typically <see cref="ConditionCodes.OK"/>), that represents a
+        promise that a subsequent call to <paramref name="removeProperty"/> will succeed. If the function returns null, that indicates that
+        the named property is not handled by the service, in which case if the name does not have the WebDAV namespace it will be considered
+        to be a dead property. If the function is null, only dead properties can be removed.
+      </param>
+      <param name="setProperty">
+        A function that takes a property name and value, and sets the named property to the given value. If the
+        value was set successfully, the function should return a <see cref="ConditionCode"/> indicating success (typically
+        <see cref="ConditionCodes.OK"/>). If setting the property failed, the function should return a <see cref="ConditionCode"/> describing
+        the failure. If the property is not handled by the service, the function should return null, in which case the property will be
+        treated as a dead property if it's not in the WebDAV namespace. This function can only be null if <paramref name="canSetProperty"/>
+        never returns success.
+      </param>
+      <param name="removeProperty">
+        A function that takes a property name and removes the named property. If the property was removed
+        successfully, the function should return a <see cref="ConditionCode"/> indicating success (typically
+        <see cref="ConditionCodes.OK"/>). If removing the property failed, the function should return a <see cref="ConditionCode"/>
+        describing the failure. If the property is not handled by the service, the function should return null, in which case the property
+        will be treated as a dead property if it's not in the WebDAV namespace. This function can only be null if
+        <paramref name="canRemoveProperty"/> never returns success.
+      </param>
+      <param name="applyChanges">
+        A method that is called if all changes have been applied successfully. This should be used by services
+        whose <paramref name="setProperty"/> and <paramref name="removeProperty"/> functions work transactionally, in which case
+        <paramref name="applyChanges"/> provides the signal that the changes should be committed.
+      </param>
+    </ProcessStandardRequest>
+  </PropPatchRequest>
+  
+  <PutRequest>
+    <ProcessStandardRequest>
+      <summary>Performs standard processing of a <c>PUT</c> request.</summary>
+      <param name="entityBody">
+        A <see cref="Stream"/> to which the new entity body should be written. The stream must be writable, and it
+        is best if the stream is also seekable and readable.
+      </param>
+      <param name="metadata">
+        Metadata about the entity body. If null, the metadata will be retrieved by calling
+        <see cref="IWebDAVResource.GetEntityMetadata"/> on the <see cref="WebDAVContext.RequestResource"/> if the request resource is
+        available. As much information should be provided as possible. If <see cref="EntityMetadata.Length"/> is null, the length will be
+        taken from the <paramref name="entityBody"/> if the stream is seekable. If <see cref="EntityMetadata.EntityTag"/> is null, an entity
+        tag will be computed from the stream (using <see cref="DAVUtility.ComputeEntityTag(Stream,bool)"/>) if the stream is readable and
+        seekable. If the entity tag or last modification time is unavailable, request preconditions (e.g. <c>If-Match</c> or
+        <c>If-Unmodified-Since</c> headers), which are particularly important for <c>PUT</c> requests, cannot be processed correctly.
+      </param>
+      <param name="canonicalPath">
+        The canonical path to the resource to create or overwrite. If null, <see cref="WebDAVContext.GetCanonicalPath"/> will be used.
+      </param>
+      <returns>
+        This method returns the new length of the entity body. However, the length is only valid if the request
+        <see cref="WebDAVRequest.Status"/> indicates success (i.e. is null or <see cref="ConditionCode.IsSuccessful"/>), and should not be
+        used otherwise.
+      </returns>
+      <remarks>
+        This method implements the standard <c>PUT</c> method, which replaces the entity body entirely. If <paramref name="entityBody"/> is
+        seekable, the method also supports a partial <c>PUT</c> extension that allows clients to specify the portion of the entity body to
+        overwrite in the <c>Content-Range</c> header. If <paramref name="entityBody"/> is readable, the method additionally supports
+        partial <c>PUT</c> invocations that replace a portion of the entity body with a larger or smaller portion (i.e. that cause the
+        entity body to contract or expand). This is why it is best for <paramref name="entityBody"/> to be readable and seekable. If
+        creating a readable, seekable stream is expensive, you can examine the <see cref="ContentRange"/> property and only create a
+        readable, seekable stream if <see cref="ContentRange"/> is not null (indicating a partial <c>PUT</c> request).
+        <para>
+          This method does not provide any headers to the client (except the <c>Content-Range</c> header when the requested range is 
+          invalid), but you can add additional headers after the method returns. In particular, you should add the
+          <c>ETag</c> and <c>Last-Modified</c> headers if the <c>PUT</c> request was successfully processed (i.e. if
+          <see cref="DAVUtility.IsSuccess"/> returns true when given the <see cref="WebDAVRequest.Status"/> after this method returns).
+          If you do not have your own method for computing entity tags, you should use the
+          <see cref="DAVUtility.ComputeEntityTag(Stream,bool)"/> method.
+        </para>
+      </remarks>
+    </ProcessStandardRequest>
+    <ProcessStandardRequestNew>
+      <summary>Performs standard processing of a <c>PUT</c> request to a new resource.</summary>
+      <param name="canonicalPath">
+        The canonical path to the resource to create. If null, <see cref="WebDAVContext.GetCanonicalPath"/> will be used.
+      </param>
+      <param name="createFile">
+        A <see cref="PutRequest.FileCreator"/> function that should create a new file at the request path and return a
+        <see cref="ConditionCode"/> indicating whether the attempt succeeded or failed, or null for a standard success code. If it
+        succeeded, the function should also return a writable and preferably seekable stream where the new entity body will be written.
+      </param>
+      <returns>
+        This method returns the new length of the entity body. However, the length is only valid if the request
+        <see cref="WebDAVRequest.Status"/> indicates success (i.e. <see cref="DAVUtility.IsSuccess"/> returns true), and should not be
+        used otherwise.
+      </returns>
+      <remarks>
+        This method does not provide any headers to the client (except the <c>Content-Range</c> header when the requested range is 
+        invalid), but you can add additional headers after the method returns. In particular, you should add the
+        <c>ETag</c> and <c>Last-Modified</c> headers if the <c>PUT</c> request was successfully processed (i.e. if
+        <see cref="DAVUtility.IsSuccess"/> called with the <see cref="WebDAVRequest.Status"/> is true after this method returns).
+        If the request was not successfully processed, any file created by <paramref name="createFile"/> should be deleted.
+        If you do not have your own method for computing entity tags, you should use the
+        <see cref="DAVUtility.ComputeEntityTag(Stream,bool)"/> method.
+      </remarks>
+    </ProcessStandardRequestNew>
+  </PutRequest>
+  
+  <PropertyStore>
+    <Dispose>
+      <summary>Called to dispose the property store.</summary>
+      <param name="manualDispose">False if the method was called from the finalizer and true if not.</param>
+      <remarks>This method should be overriden by derived property stores to flush property data to persistent storage.</remarks>
+    </Dispose>
+    <OnPropertiesChanged>
+      <summary>Called when a resources's properties have changed.</summary>
+      <param name="canonicalPath">The canonical, relative path to the resource.</param>
+      <param name="newProperties">
+        The dictionary containing the resource's new property set, or null if all of the resource's properties
+        were removed. This dictionary should not be modified.
+      </param>
+      <remarks>
+        <note type="caution">
+          The property store remains locked while this method is called, so the method should not perform slow operations such
+          as accessing a disk, database, or network service. It's recommended to perform such operations asynchronously.
+        </note>
+      </remarks>      
+    </OnPropertiesChanged>
+  </PropertyStore>
+  
+  <WebDAVContext>
+    <OpenRequestBody>
+      <summary>
+        Returns the request stream after decoding it according to the <c>Content-Encoding</c> header. The returned should be closed
+        when you are done reading from it.
+      </summary>
+      <remarks>
+        This method supports the <c>gzip</c>, <c>deflate</c>, and <c>identity</c> content encodings. Any other content encoding will
+        cause a <see cref="WebDAVException"/> to be thrown with a 415 Unsupported Media Type status. If you need to support additional
+        content encodings, you must do so yourself, using the <see cref="HttpRequest.InputStream"/> directly.
+      </remarks>
+    </OpenRequestBody>
+    <OpenResponseBody>
+      <summary>
+        Returns the response stream after encoding it according to the <c>Accept-Encoding</c> header. The returned stream should be
+        closed when you are done writing to it.
+      </summary>
+      <param name="enableCompression">
+        Specifies whether compression is enabled. If true, a compressed content encoding will be chosen if
+        it's preferred by the client. Otherwise, only the uncompressed <c>identity</c> encoding can be chosen.
+      </param>
+      <param name="encoding">
+        Specifies the <see cref="ContentEncoding"/> that will used to encode the output. This is normally the value returned from
+        <see cref="ChooseResponseEncoding"/>.
+      </param>
+      <param name="disableBuffering">
+        If true, the <see cref="HttpResponse.BufferOutput"/> property will be set to false before the stream is opened.
+        If false, it will not be changed.
+      </param>
+      <remarks>
+        This method supports the <c>gzip</c>, <c>deflate</c>, and <c>identity</c> content encodings. Any other content encoding will
+        cause a <see cref="WebDAVException"/> to be thrown with a 406 Not Acceptable status. If you need to support additional content
+        encodings, you must do so yourself, using the <see cref="HttpResponse.OutputStream"/> directly. If you need to know the
+        <see cref="ContentEncoding"/> that was or would be used, call <see cref="ChooseResponseEncoding"/> method. This method sets the
+        <c>Content-Encoding</c> header if buffering is enabled at the time the method is called. (This is not related to the
+        <c>disableBuffering</c> parameter, if any.)
+      </remarks>
+    </OpenResponseBody>
+  </WebDAVContext>
+
+  <WebDAVModule>
+    <ShouldDenyAccess>
+      <summary>
+        Determines whether the user should be denied access to the resource at the given <see cref="Uri"/>. If the URI does not map
+        to a service, this method will return false.
+      </summary>
+      <param name="context">The <see cref="WebDAVContext"/> in which the request is being executed.</param>
+      <param name="uri">
+        A <see cref="Uri"/> identifying a resource. This can either be an absolute URI (i.e. a URI with a scheme and
+        authority) or a relative URI with an absolute path (i.e. a URI constructed from a path beginning with a slash). If the URI is
+        relative, the authority of the request URI will be used.
+      </param>
+      <include file="documentation.xml" path="/DAV/Common/ShouldDenyAccess/*[not(@name='response')]" />
+    </ShouldDenyAccess>
+  </WebDAVModule>
+  
+  <WebDAVRequest>
+    <CheckPreconditions>
+      <summary>
+        Determines whether a request should be processed given the precondition (i.e. <c>If</c>, <c>If-Match</c>,
+        <c>If-None-Match</c>, <c>If-Modified-Since</c>, and <c>If-Unmodified-Since</c>) headers submitted by the client. This method also
+        checks resource locks by calling <see cref="CheckSubmittedLockTokens()"/>.
+      </summary>
+      <param name="requestMetadata">
+        The <see cref="EntityMetadata"/> for the request resource. If null, the metadata will be retrieved by
+        calling <see cref="IWebDAVResource.GetEntityMetadata"/> on the <see cref="WebDAVContext.RequestResource"/> if it is available.
+      </param>
+      <param name="canonicalPath">
+        The canonical path to the request resource. If null, <see cref="WebDAVContext.GetCanonicalPath"/> will be used.
+      </param>
+      <returns>
+        Returns null if the request should proceed normally. Otherwise, the status code that should be returned to the client is
+        returned. This might be an error code (e.g. 412 Precondition Failed) or a redirection code (e.g. 304 Not Modified).
+      </returns>
+      <remarks>
+        If the request would normally result in a response other than 2xx or 412 Precondition Failed, then that response must be
+        given instead. That is to say, this method should only be called if the request would otherwise result in a 2xx response.
+        In addition, if the request is a <c>GET</c> request and this method returns 304 Not Modified, the 304 response should be ignored if
+        the <c>GET</c> request would otherwise have been responded to with anything but 200 OK. (For instance, if a particular <c>GET</c>
+        request would normally be responded to with 206 Partial Content and this method returns 304 Not Modified, the request should be
+        processed normally and return 206 Partial Content. However if this method returns any other status or if the <c>GET</c> request would
+        normally be responded to with 200 OK, the status returned from this method should be returned to the client instead of processing the
+        request.)
+        <note type="caution">
+          This method does not check the <c>If-Range</c> header, because it works differently from the other <c>If-</c>
+          headers. When responding to a <c>GET</c> request, you should check the <c>If-Range</c> header using
+          <see cref="GetOrHeadRequest.IfRange"/> or use
+          <see cref="O:AdamMil.WebDAV.Server.GetOrHeadRequest.WriteStandardResponse">GetOrHeadRequest.WriteStandardResponse</see>,
+          which checks it for you.)
+        </note>
+      </remarks>
+    </CheckPreconditions>
+    <CheckSubmittedLockTokens>
+      <summary>Checks that the client has submitted all required lock tokens.</summary>
+      <returns>
+        If all required lock tokens were submitted, this method should return null. Otherwise, it should return a
+        <see cref="ConditionCode"/> representing the error that should be returned to the client, typically a
+        <see cref="LockTokenSubmittedConditionCode"/>.
+      </returns>
+    </CheckSubmittedLockTokens>
+    <CheckSubmittedLockTokensRemarks>
+      <remarks>
+        You generally do not need to call this method manually, as both <see cref="WebDAVRequest.CheckPreconditions(EntityMetadata)"/> and
+        the <c>ProcessStandardRequest</c> methods of derived classes invoke this method when needed.
+      </remarks>
+    </CheckSubmittedLockTokensRemarks>
+    <CheckSubmittedLockTokensCore>
+      <summary>
+        Checks that the client has submitted all required lock tokens. If so, this method returns null. If not, the method returns
+        a <see cref="ConditionCode"/> containing the error that should be returned to the client.
+      </summary>
+      <param name="lockType">
+        A <see cref="LockType"/> that would conflict with the locks that you want to check for. Typically, this is
+        an exclusive lock of a type that protects the operation being performed by the request. For instance, a <c>PUT</c> request would
+        usually pass <see cref="LockType.ExclusiveWrite"/> for the lock type because it would conflict with (and therefore match) any other
+        write locks on the resource, while ignoring non-write locks.
+      </param>
+      <param name="checkParent">
+        If true, the parent resource will be checked for a lock as well. You should pass true when the operation will change the
+        parent collection, for instance when adding, renaming, or deleting an item. Pass false when the operation only modifies the
+        content or properties of an existing item.
+      </param>
+      <param name="checkDescendants">
+        If true, locks on descendant items will be checked if there is no lock directly on the resource. You should typically pass true if
+        the operation affects all descendant items of the resource, and pass false otherwise.
+      </param>
+    </CheckSubmittedLockTokensCore>
+    <FilterSubmittedLockToken>
+      <summary>
+        Filters a lock token submitted by the client in the <c>If</c> header. If the method returns false, the submitted lock token
+        will be ignored.
+      </summary>
+    </FilterSubmittedLockToken>
+    <ParseRequest>
+      <summary>Parses and validates the request.</summary>
+      <remarks><note type="inherit">
+        If the request is invalid, this method may throw an exception (preferably of type <see cref="System.Xml.XmlException"/> or
+        <see cref="WebDAVException"/>) or set the request's <see cref="WebDAVRequest.Status"/> to an error code. Setting the
+        <see cref="WebDAVRequest.Status"/> is preferable for improved performance.
+      </note></remarks>
+      <exception cref="System.Xml.XmlException">Possibly thrown if the request body XML is invalid.</exception>
+      <exception cref="WebDAVException">Possibly thrown if the request is invalid.</exception>
+    </ParseRequest>
+    <ParseRequestXml>
+      <summary>
+        Called by <see cref="ParseRequest"/> to parse and validate the XML request body. The <see cref="XmlDocument"/> will be null
+        if the client did not submit a body.
+      </summary>
+      <remarks><note type="inherit">
+        If the request body is invalid, this method should set <see cref="WebDAVRequest.Status"/> to an appropriate error code.
+      </note></remarks>
+    </ParseRequestXml>
+    <WriteResponse>
+      <summary>
+        Validates the processing performed by the <see cref="IWebDAVService"/> and writes the response to the client.
+      </summary>
+      <exception cref="ContractViolationException">
+        Thrown if the <see cref="IWebDAVService"/> that serviced the request failed to service it properly.
+      </exception>
+    </WriteResponse>
+  </WebDAVRequest>
+
+  <GetOrHeadRequest>
+    <IndexItem>
+      <Cons>
+        <param name="name">
+          The name of the item displayed in the index. This may be different from the path segment used to construct the item's URL.
+        </param>
+        <param name="pathSegment">
+          The canonical (minimally escaped) path segment appended to the request URL to form the URL of the item's resource. See 
+          <see cref="DAVUtility.CanonicalSegmentEncode"/> for details on minimally escaped path segments.
+        </param>
+        <param name="isDirectory">Indicates whether the item represents a directory (collection member) or a file (non-collection member).</param>
+        <param name="lastModificationTime">The time that the item content was last changed, or null if the time is unknown.</param>
+        <param name="size">The size of the item content, or -1 if the size is unknown or inapplicable.</param>
+      </Cons>
+    </IndexItem>
+    <WriteStandardResponse>
+      <summary>Writes a typical response to a <c>GET</c> or <c>HEAD</c> request.</summary>
+      <param name="entityBody">A <see cref="Stream"/> containing the entity body. It is best if the stream is seekable.</param>
+      <param name="mediaType">The RFC 2616 <c>media-type</c> of the entity. If null, no media type will be sent to the client.</param>
+      <param name="metadata">
+        Metadata about the entity body. As much information should be provided as possible. If <see cref="EntityMetadata.MediaType"/> is
+        null, no media type will be sent to the client. If <see cref="EntityMetadata.Length"/> is null, the length will be taken from
+        <paramref name="entityBody"/> if the stream is seekable. If <see cref="EntityMetadata.EntityTag"/> is null, an entity tag will be
+        taken from the <c>ETag</c> header if it has been set or computed from the stream (using
+        <see cref="DAVUtility.ComputeEntityTag(Stream,bool)"/>) if the stream is seekable. If <see cref="EntityMetadata.LastModifiedTime"/>
+        is null, the last modification time will be taken from the <c>Last-Modified</c> header if it has been set. If the entity tag or
+        last modification time is unavailable, request preconditions (e.g. <c>If-Match</c> or <c>If-Unmodified-Since</c> headers) cannot be
+        processed correctly, but the method will attempt to do the best it can with the available information.
+      </param>
+      <remarks>
+        This method implements standard <c>GET</c> and <c>HEAD</c> mechanisms. It respects the HTTP <c>Range</c> header and will
+        provide partial responses if necessary, including multi-range partial responses. It uses
+        <see cref="DAVUtility.ComputeEntityTag(Stream,bool)" /> to compute the entity tag of the body when possible. It is capable of
+        working with unseekable streams, although partial responses cannot be provided for unseekable streams if the length is not known,
+        and the entity tag cannot be automatically computed for unseekable streams. It provides the <c>Accept-Ranges</c>,
+        <c>Content-Length</c>, <c>Content-Range</c>, <c>Content-Type</c>, <c>ETag</c>, and <c>Last-Modified</c> headers to the client as
+        appropriate. If you want to send additional headers, you must add them to the response before calling this method, as the method
+        may disable output buffering before writing the entity body.
+      </remarks>
+    </WriteStandardResponse>
+  </GetOrHeadRequest>
+
+  <PropFindRequest>
+    <ProcessStandardRequest>
+      <summary>
+        Implements standard <c>PROPFIND</c> processing for a non-collection resource, given a dictionary containing all of the
+        resource's properties.
+      </summary>
+    </ProcessStandardRequest>
+    <ProcessStandardRequestRec>
+      <summary>Implements standard <c>PROPFIND</c> processing for a collection resource.</summary>
+      <typeparam name="T">The concrete type of the resources being processed.</typeparam>
+      <param name="rootResource">The initial resource being processed, which should correspond to the request resource.</param>
+    </ProcessStandardRequestRec>
+  </PropFindRequest>
+
+  <PropFindResource>
+    <SetValueNIRemarks>
+      <remarks>
+        If the property is a built-in WebDAV property (i.e. one defined in RFC 4918), the specified type will be ignored as per RFC 4316
+        which states in section 5 that a property must not have a data type if the property is defined in the WebDAV specification.
+        If the value is not null and the property data type is known, the value will be validated against the the data type. Currently, the
+        known property types are the types of built-in WebDAV properties as well as most types defined in the
+        <c>http://www.w3.org/2001/XMLSchema</c> namespace (e.g. xs:boolean, xs:int, etc).
+      </remarks>
+    </SetValueNIRemarks>
+  </PropFindResource>
+</DAV>

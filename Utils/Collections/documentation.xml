@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Collections>
+  <BloomFilter>
+    <DirectConstructor>
+      <summary>
+        Initializes an empty <see cref="BloomFilter{T}"/> with the given size.
+      </summary>
+      <param name="bitCount">The number of bits in the bloom filter. This value will be rounded up to the nearest 32 or 64 bits.</param>
+      <param name="maxHashCount">
+        The maximum number of hash functions to use from the hash provider. If the
+        hash provider does not support this many hash functions, fewer will be used.
+      </param>
+      <param name="hashProvider">
+        The <see cref="IMultiHashProvider{T}"/> that provides the hash codes for the items added to the
+        set, or null to use a default hash code provider that works reasonably well for most types.
+      </param>
+      <remarks>
+        It is recommended to use the <see cref="BloomFilter{T}(int,float)"/> constructor, which will calculate an appropriate
+        size for the bloom filter based on a desired false positive rate.
+      </remarks>
+    </DirectConstructor>
+    <TuningConstructor>
+      <summary>
+        Initializes an empty <see cref="BloomFilter{T}" /> that should approximate the given false positive rate for the given
+        number of items.
+      </summary>
+      <param name="itemCount">The approximate number of items that will be added to the set.</param>
+      <param name="falsePositiveRate">The desired false positive rate, as a number from 0 to 1 (exclusive).</param>
+      <param name="hashProvider">
+        The <see cref="IMultiHashProvider{T}"/> that provides the hash codes for the items added to the
+        set, or null to use a default hash code provider that works reasonably well for most types.
+      </param>
+      <param name="maxHashCount">
+        The maximum number of hash functions to use, or 0 to use the number that produces the smallest filter for the given false
+        positive rate. It is recommended to simply pass 0, allowing an optimal Bloom filter to be constructed but if you want to
+        improve the speed, you can limit the number of hash functions. The filter may use more memory as a result. Do not use
+        fewer than three hash functions, as it will cause memory consumption to rise dramatically. (For instance, using only one
+        hash function may cause memory usage to be 100 or 1000 times what it otherwise would be, or more, depending on the false
+        positive rate.) Even three hash functions may cause memory consumption to be 3 or 5 or 10 times the normal amount.
+        In general, as the false positive rate decreases, more hash functions are needed.
+      </param>
+      <remarks>
+        As more items are added to the set, the false positive rate increases. This constructor attempts to construct a
+        filter that will have the given false positive rate after the given number of items have been added. The Bloom filter is
+        usually capable of achieving the false positive rate or better, but sometimes it may exceed it slightly, especially with
+        small numbers of items. If you have strict requirements for the false positive rate, you should perform testing to see
+        how it performs with your data.
+      </remarks>
+    </TuningConstructor>
+  </BloomFilter>
+
+  <CollectionBase>
+    <ClearItems>
+      <summary>Called when the collection is being cleared. The base implementation actually clears the list.</summary>
+    </ClearItems>
+    <InsertItem>
+      <summary>
+        Called when a new item is being inserted into the collection. The base implementation actually performs the insertion.
+      </summary>
+    </InsertItem>
+    <RemoveItem>
+      <summary>
+        Called when an item is being removed from the collection. The base implementation actually performs the removal.
+      </summary>
+    </RemoveItem>
+    <SetItem>
+      <summary>
+        Called when an item in the collection is being assigned. The base implementation actually performs the assignment.
+      </summary>
+    </SetItem>
+    <OnCollectionChanged>
+      <summary>Called when the collection may have been changed by the user.</summary>
+    </OnCollectionChanged>
+  </CollectionBase>
+
+  <Common>
+    <Clear>
+      <summary>Removes all items from the collection.</summary>
+    </Clear>
+    <Contains>
+      <summary>Determines whether the collection contains the given item.</summary>
+    </Contains>
+    <CopyTo>
+      <summary>Copies all items from the collection to the array at the given index.</summary>
+    </CopyTo>
+    <GetEnumerator>
+      <summary>Allocates and returns an <see cref="IEnumerator{T}" /> to iterate through the items in the collection.</summary>
+    </GetEnumerator>
+    <IndexOf>
+      <summary>Returns the first index of the given item, or -1 if the item does not exist in the collection.</summary>
+    </IndexOf>
+    <Indexer>
+      <summary>Gets the item from the list at the given index.</summary>
+    </Indexer>
+    <Insert>
+      <summary>Inserts an item into the collection at a given index.</summary>
+    </Insert>
+    <Remove>
+      <summary>
+        Removes the first instance of the given item from the collection if it exists. Returns true if an item was removed.
+      </summary>
+    </Remove>
+    <RemoveAt>
+      <summary>Removes the item at the given index.</summary>
+    </RemoveAt>
+    <ToArray>
+      <summary>Creates and returns an array containing all of the items in the collection.</summary>
+    </ToArray>
+  </Common>
+
+  <Dictionary>
+    <Contains>
+      <summary>Determines whether the dictionary contains the given <see cref="KeyValuePair{K,V}" />.</summary>
+    </Contains>
+    <ContainsKey>
+      <summary>Determines whether the dictionary contains the given key.</summary>
+    </ContainsKey>
+    <CopyTo>
+      <summary>
+        Copies all of the keys and values in the dictionary to an array in the form of <see cref="KeyValuePair{K,V}" /> objects.
+      </summary>
+    </CopyTo>
+    <GetEnumerator>
+      <summary>
+        Returns an enumerator that iterates through the keys and values in the dictionary, in the form of
+        <see cref="KeyValuePair{K,V}" /> objects.
+      </summary>
+    </GetEnumerator>
+    <Indexer>
+      <summary>Returns the item with the given key, or throws an exception if they key does not exist in the dictionary.</summary>
+    </Indexer>
+    <Keys>
+      <summary>Gets a collection containing the keys within the dictionary.</summary>
+    </Keys>
+    <ToArray>
+      <summary>
+        Returns an array containing all of the keys and values in the dictionary in the form of <see cref="KeyValuePair{K,V}" />
+        objects.
+      </summary>
+    </ToArray>
+    <TryGetValue>
+      <summary>
+        Attempts to retrieve the value with the given key. Returns true if the value could be retrieved and false if the key
+        does not exist in the dictionary.
+      </summary>
+    </TryGetValue>
+    <Values>
+      <summary>
+        Gets a collection containing the values within the dictionary. Values may be included in the collection multiple times,
+        if they are referenced by multiple keys.
+      </summary>
+    </Values>
+  </Dictionary>
+
+  <MultiHashProvider>
+    <HashCount>
+      <summary>Gets the number of distinct hash functions supported.</summary>
+    </HashCount>
+    <GetHashCode>
+      <summary>Gets a hash code for an item.</summary>
+      <param name="hashFunction">
+        The number of the hash function to use, from 0 to <see cref="IMultiHashProvider{T}.HashCount"/>-1. Each hash function should hash
+        the item in a different way. (Different hash functions may produce the same value sometimes, but that should be a rare coincidence.)
+      </param>
+      <param name="item">The item to hash.</param>
+      <returns>A hash code. Negative hash codes are supported.</returns>
+    </GetHashCode>
+  </MultiHashProvider>
+
+  <Queue>
+    <TryDequeue>
+      <summary>
+        Attempts to remove an item from the queue. True is returned if an item was successfully removed (and stored in
+        <paramref name="item"/>) and false if an item was not removed because the queue was empty.
+      </summary>
+    </TryDequeue>
+  </Queue>
+  
+  <ValidatedCollection>
+    <ValidateItem>
+      <summary>
+        Called when an item is about to be inserted or set, to check the validity of the new item. The method should throw an
+        exception if the item is not valid.
+      </summary>
+    </ValidateItem>
+  </ValidatedCollection>
+</Collections>

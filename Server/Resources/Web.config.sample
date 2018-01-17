@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- This is a sample configuration file, parts of which can be merged into a web application's configuration file to configure it for use
+     with AdamMil.WebDAV.Server. Note that if you compile the server yourself or receive a binary from a third party, you may need to
+     change the public key tokens to match the public key used to compile the binary, if any.
+     
+     WARNING: Don't use this file blindly to set up a WebDAV site! It contains example settings that change the defaults in ways you don't
+     want. The purpose of this file is to provide examples and documentation to help you create your own web.config file. Please read this
+     file and make intelligent decisions as to which settings to keep and which to change or omit. In general, optional elements and
+     attributes that override the defaults should be omitted unless you really need them; they are included here for exemplary purposes
+     only.
+-->
+<configuration>
+  <!-- Declare our configuration sections so .NET knows how to parse them. -->
+  <configSections>
+    <section name="AdamMil.Web" type="AdamMil.Web.Configuration.WebSection, AdamMil.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc73e8d20ddf3c62" />
+    <sectionGroup name="AdamMil.WebDAV">
+      <section name="server" type="AdamMil.WebDAV.Server.Configuration.WebDAVServerSection, AdamMil.WebDAV.Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc73e8d20ddf3c62" />
+    </sectionGroup>
+  </configSections>
+
+  <system.web>
+    <!-- You may want to increase the maximum request size to allow uploading large files, since the default is 4MB. This sets it to 100MB,
+         but you must also change the system.webServer/security/requestFiltering element below. This element also increases the request
+         timeout from the default of 110 seconds to one hour (3600 seconds), to allow for uploads over slow connections.
+    -->
+    <httpRuntime executionTimeout="3600" maxRequestLength="102400" /> <!-- the length is in kilobytes -->
+  </system.web>
+
+  <system.webServer>
+    <!-- It's required to add the AdamMil.WebDAV module to process the requests. If you're using the Classic pipeline, you would add it to
+         system.web/httpModules instead.
+    -->
+    <modules>
+      <add name="AdamMil.WebDAV" type="AdamMil.WebDAV.Server.WebDAVModule, AdamMil.WebDAV.Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc73e8d20ddf3c62" />
+    </modules>
+    <!-- You may want to increase the maximum content length to allow uploading large files, since the default is 30MB (limited further by
+         the maximum request length, above). This sets it to 100MB, but you must also change the system.web/httpRuntime element above.
+         In some cases (for instance, if you host the site using IIS Express), you may need to modify the applicationhost.config file to
+         allow the request limits to be overridden. If IIS returns a zero-byte 500 Internal Server Error response, this may be the culprit.
+         Try removing the <security> element to confirm.
+    -->
+    <security>
+      <requestFiltering>
+        <requestLimits maxAllowedContentLength="104857600" /> <!-- the length is in bytes -->
+      </requestFiltering>
+    </security>
+  </system.webServer>
+
+  <!-- The AdamMil.Web element is optional. If defined, it allows you to customize the media type extension and compression mappings. -->
+  <AdamMil.Web>
+    <!-- The optional 'mediaTypeMap' element configures the mapping between file extensions and media types used by the WebDAV server.
+          If the element is omitted, a default mapping will be used. This element should generally be omitted. The element has these
+          attributes:
+          * defaultFile - This attribute specifies where the default map entries will be loaded from. If omitted, an internal default
+                          mapping will be used - the same mapping that would be used if the entire 'mediaTypeMap' element was omitted. For
+                          the format of the default mapping file, see Documentation/MediaTypes.xml and Documentation/MediaTypes.xsd in the
+                          WebDAV server distribution.
+          * defaultExtension - This attribute specifies the file extension that the server will use when generating a file name for a
+                               resource with an unknown media type. If omitted, the default from 'defaultFile' will be used, which is
+                               normally to not use any file extension.
+          * defaultMediaType - This attribute specifies the media type to use if no media type matches a particular file extension. If
+                               omitted, the default from 'defaultFile' will be used, which is normally to report no media type at all.
+          Within the 'mediaTypeMap' element, the standard <add>, <clear/>, and <remove/> tags can be used to modify the mapping.
+    -->
+    <mediaTypeMap defaultFile="D:\data\mediaTypeMap.xml" defaultExtension="bin" defaultMediaType="application/octet-stream">
+      <!-- Each media type map entry has the following attributes:
+            * mediaType - The media type, which is the HTTP media-type (without parameters), such as text/css. This attribute is required.
+            * extension - The file extension, without any leading period. The extension may contain periods within it, such as dll.config,
+                          which matches *.dll.config. This attribute is required.
+            * canonicalExtension - Boolean. Whether the extension is the canonical extension for the media type. If true, the media type
+                                   will map to the given file extension, and if false, it will only map to the given file extension if
+                                   this is the only extension specified for the media type. This affects the server's attempts to choose a
+                                   default file extension for a file with the given media type. The default is false.
+            * canonicalMediaType - Boolean. Whether the media type is the canonical media type for the file extension. If true, file names
+                                   ending with the extension will map to the media type. If false, they will not. The default is true.
+            For a <remove> element, only one of 'mediaType' or 'extension' is required, but both can be used. If only one is specified,
+            the other will be considered to be a wildcard.
+      -->
+      <!-- <clear/> --> <!-- clear out the default mappings -->
+      <remove mediaType="text/plain" /> <!-- remove all mappings for text/plain -->
+      <remove extension="pdf" />        <!-- remove all mappings for the .pdf extension -->
+      <remove mediaType="audio/aiff" extension="aif" /> <!-- remove the specific mapping between audio/aiff and .aif -->
+      <add mediaType="text/foobar" extension="tfb" canonicalExtension="true" />
+      <add mediaType="text/foobar" extension="xtfb" />
+      <add mediaType="text/baz" extension="baz" />
+    </mediaTypeMap>
+    <!-- The optional 'compression' element configures which media types will be compressed by default. If the element is omitted, a
+          default mapping will be used. In general, this element should be omitted. The element has these attributes:
+          * defaultFile - This attribute specifies where the default map entries will be loaded from. If omitted, an internal default
+                          mapping will be used - the same mapping that would be used if the entire 'compression' element was omitted. For
+                          the format of the default mapping file, see Documentation/Compression.xml and Documentation/Compression.xsd in
+                          the WebDAV server distribution.
+    -->
+    <compression defaultFile="D:\data\compressionMap.xml">
+      <!-- Each compression mapping element has the following attributes:
+            * mediaType - The media type pattern the mapping applies to. Asterisks indicate wildcards (such as "text/*" or "*"). Wildcards
+                          in <remove> tags do not allow removing multiple entries. Rather, a <remove> tag can remove at most one entry -
+                          the one whose mediaType attribute matches exactly.
+            * compress - Specifies whether resources with the given media type should be compressed. The default is true.
+            Elements will be matched in the order given. If a media type does not match any element, it will not be compressed by default.
+      -->
+      <clear/>
+      <!-- <remove mediaType="application/*" /> --> <!-- this only removes the application/* mapping, not application/xml, etc. -->
+      <add mediaType="text/*" />
+      <add mediaType="application/xml" />
+      <add mediaType="application/*+xml" />
+      <add mediaType="application/*+json" />
+      <!-- compress foo/* except for foo/bar -->
+      <add mediaType="foo/bar" compress="false" />
+      <add mediaType="foo/*" compress="true" />
+    </compression>
+  </AdamMil.Web>
+
+  <AdamMil.WebDAV>
+    <server>
+      <!-- These elements are only needed if you need to support locks or dead properties.
+      <davLockManager type="AdamMil.WebDAV.Server.FileLockManager, AdamMil.WebDAV.Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc73e8d20ddf3c62"
+                      lockDir="D:\data\webdav\locks\" />
+      <propertyStore type="AdamMil.WebDAV.Server.FilePropertyStore, AdamMil.WebDAV.Server, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc73e8d20ddf3c62"
+                     propertyDir="D:\data\webdav\props\" />
+      -->
+      <locations>
+        <add match="/" type="YourWebDAV.ServiceProvider, YourWebDAV, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0123456789abcdef" />
+      </locations>
+    </server>
+  </AdamMil.WebDAV>
+ 
+
+</configuration>

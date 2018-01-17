@@ -1,0 +1,8 @@
+syntax: glob
+**/AdamMil.snk
+**/bin/
+**/obj/
+*.csproj.user
+*.suo
+Documentation/output
+Tests/App.config
