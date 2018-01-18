@@ -78,7 +78,18 @@ namespace TestWebAppDomain.Services.WebDav
             {
                 properties[DAVNames.getcontenttype] = metadata.MediaType;
             }
-            
+
+            if (context.LockManager != null)
+            {
+                // here we want to include the lockdiscovery value unless it must not be returned. we'll use the MustExcludePropertyValue function
+                // to replace the value with null whenever it's not needed
+
+                context.
+                properties[DAVNames.lockdiscovery] = request.MustExcludePropertyValue(DAVNames.lockdiscovery) ?
+                    null : request.Context.LockManager.GetLocks(CanonicalPath, LockSelection.SelfAndRecursiveAncestors, null);
+                properties[DAVNames.supportedlock] = LockType.WriteLocks;
+            }
+
             return properties;
 
             // XML
