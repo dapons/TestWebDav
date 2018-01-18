@@ -14,7 +14,7 @@ namespace TestWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly FragmentService _fragmentService;
-        private const string WebDavBaseUrl = @"http://lpa-h-nb-228:63165/webdav/";
+        private const string WebDavBaseUrl = @"http://lpa-h-nb-228:63165/sql/";
 
 
         public HomeController()
@@ -38,9 +38,13 @@ namespace TestWebApp.Controllers
             }
 
             var outputFragment = Mapper.Map<Fragment>(fragment);
-            outputFragment.DefaultUrl = HttpUtility.UrlDecode($"{WebDavBaseUrl}{outputFragment.Name}");
-            outputFragment.OpenUrl = HttpUtility.UrlDecode($"ms-word:ofv|u|{WebDavBaseUrl}{outputFragment.Name}");
-            outputFragment.EditUrl = HttpUtility.UrlDecode($"ms-word:ofe|u|{WebDavBaseUrl}{outputFragment.Name}");
+            //outputFragment.DefaultUrl = HttpUtility.UrlDecode($"{WebDavBaseUrl}{outputFragment.Name}");
+            //outputFragment.OpenUrl = HttpUtility.UrlDecode($"ms-word:ofv|u|{WebDavBaseUrl}{outputFragment.Name}");
+            //outputFragment.EditUrl = HttpUtility.UrlDecode($"ms-word:ofe|u|{WebDavBaseUrl}{outputFragment.Name}");
+
+            outputFragment.DefaultUrl = HttpUtility.UrlDecode($"{WebDavBaseUrl}{outputFragment.Id}");
+            outputFragment.OpenUrl = HttpUtility.UrlDecode($"ms-word:ofv|u|{WebDavBaseUrl}{outputFragment.Id}.docx");
+            outputFragment.EditUrl = HttpUtility.UrlDecode($"ms-word:ofe|u|{WebDavBaseUrl}{outputFragment.Id}.docx");
 
             return outputFragment;
         }
