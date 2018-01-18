@@ -157,6 +157,8 @@
     <Compile Include="DAL\WorkingBranch.cs">
       <DependentUpon>DocDesignerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="FragmentService.cs" />
+    <Compile Include="IFragmentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
