@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1393452b143146519ce42cad55471e91" Name="Diagram1" ZoomLevel="54">
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.BranchAction" Width="1.5" PointX="6" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.BranchState" Width="1.5" PointX="0.75" PointY="18" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.Commitment" Width="1.5" PointX="5.25" PointY="17.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.DocumentPrintLanguage" Width="1.5" PointX="17.25" PointY="31.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.FragBranch" Width="1.5" PointX="17.25" PointY="17.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.FragLock" Width="1.5" PointX="20.25" PointY="19.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.Fragment" Width="1.5" PointX="15" PointY="15.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.FragmentCache" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.FragmentCacheItem" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.FragRef" Width="1.5" PointX="17.25" PointY="27.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.FragReview" Width="1.5" PointX="12.75" PointY="18.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.FragReviewInProgress" Width="1.5" PointX="12.75" PointY="22" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.FragState" Width="1.5" PointX="12.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.FragType" Width="1.5" PointX="12.75" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.GROL" Width="1.5" PointX="19.5" PointY="26.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.GrolReleaseValidation" Width="1.5" PointX="22.75" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.GrolValidation" Width="1.5" PointX="21.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.HeadBranch" Width="1.5" PointX="3" PointY="16.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.License" Width="1.5" PointX="15.5" PointY="12.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.LPADocSuiteModule" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.News" Width="1.5" PointX="12.75" PointY="24.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.OutputFileType" Width="1.5" PointX="17.25" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.Role2LPADocSuiteModule" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.Specialization" Width="1.5" PointX="8.25" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.SpecValue" Width="1.5" PointX="10.5" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.SpecValueTemplate" Width="1.5" PointX="10.5" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.UserAccount" Width="1.5" PointX="10.5" PointY="20.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.UserAccounts2License" Width="1.5" PointX="17.75" PointY="22" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.UserGroupCache" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.UserGroup" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Nordea_Abnahme_DocDesignerModel.WorkingBranch" Width="1.5" PointX="8.25" PointY="15.875" IsExpanded="true" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_WorkingBranch_BranchActionId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_HeadBranch_BranchState_BranchStateId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_WorkingBranch_BranchState_BranchStateId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Commitment_CommitUserId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Commitment_HeadBranch_BranchId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Fragment_Commitment_CommitmentId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_GROL_DocumentPrintLanguages" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragBranch_CreationUserId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragBranch_Fragment_FragId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragBranch_HeadBranch_BranchId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragLock_Fragment_EditFragId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragLock_Fragment_FragId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragLock_HeadBranch_BranchId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragLock_UserAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Fragment_FragType" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Fragment_PrevFragID" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Fragment_Review" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Fragment_ReviewInProgress" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Fragment_State" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragRef_Fragment" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_GROL_FragRef" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragReview_ReviewerId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_FragReviewInProgress_ReviewerId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_GROL_OutputFileType" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_GrolReleaseValidation_GROL" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_GrolValidation_GROL" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_GrolReleaseValidation_UserAccounts" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_GrolReleaseValidation_WorkingBranch" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_HeadBranch_CreationUserId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_HeadBranch_DeletionUserId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_HeadBranch_HeadBranch_SourceId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_WorkingBranch_HeadBranch_HeadBranchId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_DocDes_UserAccounts2License_LicenseId_Id" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Role2LPADocSuiteModule_LPADocSuiteModuleId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_News_UserAccounts_CreationUserId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_Specialization_Specialization_ParentId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_SpecValue_Specialization_SpecializationId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_SpecValueTemplate_Specialization_SpecializationId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_SpecValue_Branch_BranchId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_SpecValue_SpecValue_ParentId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_SpecValueTemplate_SpecValueTemplate_ParentId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_DocDes_UserAccounts2License_UserAccountsId_Id" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_UserAccounts_WorkingBranch_WorkingBranchId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_WorkingBranch_CreationUserId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_WorkingBranch_DeletionUserId" ManuallyRouted="false" />
+        <AssociationConnector Association="Nordea_Abnahme_DocDesignerModel.FK_WorkingBranch_WorkingBranch_SourceId" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

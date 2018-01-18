@@ -1,0 +1,2956 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Nordea_Abnahme_DocDesignerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BranchAction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="tinyint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BranchState">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="tinyint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Commitment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="CommitDate" Type="datetime" Nullable="false" />
+          <Property Name="CommitComment" Type="nvarchar" MaxLength="4000" Nullable="false" />
+          <Property Name="CommitUserId" Type="int" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DocumentPrintLanguages">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LanguageLabel" Type="nvarchar" MaxLength="9" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragBranch">
+          <Key>
+            <PropertyRef Name="BranchId" />
+            <PropertyRef Name="FragId" />
+          </Key>
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="IsHead" Type="bit" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="CreationComment" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="CreationUserId" Type="int" Nullable="false" />
+          <Property Name="FragId" Type="int" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="IsTranslated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragLock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="LockDate" Type="datetime" Nullable="false" />
+          <Property Name="ReadOnly" Type="bit" Nullable="false" />
+          <Property Name="LockUserId" Type="int" Nullable="false" />
+          <Property Name="FragId" Type="int" />
+          <Property Name="EditFragId" Type="int" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Fragment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="FragContent" Type="varbinary(max)" Nullable="false" />
+          <Property Name="Priority" Type="float" Nullable="false" />
+          <Property Name="FragName" Type="nvarchar" MaxLength="120" Nullable="false" />
+          <Property Name="Lang" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="BankGroup" Type="nvarchar" MaxLength="50" />
+          <Property Name="Bank" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserGroup" Type="nvarchar" MaxLength="50" />
+          <Property Name="Layout" Type="nvarchar" MaxLength="50" />
+          <Property Name="Modul" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProdGroup" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProdSubGroup" Type="nvarchar" MaxLength="50" />
+          <Property Name="Product" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerOp" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition1" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition2" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition3" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition4" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition5" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition6" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="FragTypeId" Type="int" Nullable="false" />
+          <Property Name="ContentText" Type="nvarchar(max)" />
+          <Property Name="MetaData" Type="nvarchar(max)" />
+          <Property Name="IsCertified" Type="bit" Nullable="false" />
+          <Property Name="FragAlias" Type="nvarchar" MaxLength="120" Nullable="false" />
+          <Property Name="Culture" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="Condition7" Type="nvarchar" MaxLength="50" />
+          <Property Name="CommitmentId" Type="int" />
+          <Property Name="IsClone" Type="bit" Nullable="false" />
+          <Property Name="FragReviewId" Type="int" />
+          <Property Name="FragStateId" Type="tinyint" Nullable="false" />
+          <Property Name="ReviewInProgressId" Type="int" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PrevFragId" Type="int" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="IsStatic" Type="bit" Nullable="false" />
+          <Property Name="AppContext" Type="nvarchar" MaxLength="50" />
+          <Property Name="FragHash" Type="binary" MaxLength="16" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="Translate" Type="bit" />
+        </EntityType>
+        <EntityType Name="FragmentCache">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FragHash" Type="binary" MaxLength="16" Nullable="false" />
+          <Property Name="FragName" Type="nvarchar" MaxLength="120" Nullable="false" />
+          <Property Name="Lang" Type="nvarchar" MaxLength="5" />
+          <Property Name="Culture" Type="nvarchar" MaxLength="5" />
+          <Property Name="BankGroup" Type="nvarchar" MaxLength="25" />
+          <Property Name="Bank" Type="nvarchar" MaxLength="25" />
+          <Property Name="UserGroup" Type="nvarchar" MaxLength="25" />
+          <Property Name="Layout" Type="nvarchar" MaxLength="50" />
+          <Property Name="Modul" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProdGroup" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProdSubGroup" Type="nvarchar" MaxLength="50" />
+          <Property Name="Product" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerOp" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition1" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition2" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition3" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition4" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition5" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition6" Type="nvarchar" MaxLength="50" />
+          <Property Name="Condition7" Type="nvarchar" MaxLength="50" />
+          <Property Name="AppContext" Type="nvarchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragmentCacheItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FragmentCacheId" Type="int" Nullable="false" />
+          <Property Name="FragId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragRef">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Position" Type="int" Nullable="false" />
+          <Property Name="ChildName" Type="nvarchar" MaxLength="160" Nullable="false" />
+          <Property Name="ChildAlias" Type="nvarchar" MaxLength="120" Nullable="false" />
+          <Property Name="DisplayExpression" Type="nvarchar" MaxLength="120" />
+          <Property Name="BookMark" Type="nvarchar" MaxLength="120" />
+          <Property Name="TargetFrame" Type="nvarchar" MaxLength="50" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParentId" Type="int" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragReview">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReviewedOn" Type="datetime" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="4000" Nullable="false" />
+          <Property Name="IsAccepted" Type="bit" Nullable="false" />
+          <Property Name="ReviewerId" Type="int" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragReviewInProgress">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InReviewSince" Type="datetime" Nullable="false" />
+          <Property Name="ReviewerId" Type="int" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragState">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="tinyint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="Label" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GROL">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="RootDocId" Type="int" />
+          <Property Name="OutputFileTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="LanguageId" Type="int" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="StaticDocName" Type="nvarchar" MaxLength="120" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" />
+          <Property Name="AppContext" Type="nvarchar" MaxLength="50" />
+          <Property Name="BankGroup" Type="nvarchar" MaxLength="50" />
+          <Property Name="Bank" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserGroup" Type="nvarchar" MaxLength="50" />
+          <Property Name="Layout" Type="nvarchar" MaxLength="50" />
+          <Property Name="CultureFormatName" Type="nvarchar" MaxLength="120" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GrolReleaseValidation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GrolId" Type="int" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="Cond0" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cond1" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cond2" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cond3" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cond4" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cond5" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cond6" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cond7" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BranchCounter" Type="int" Nullable="false" />
+          <Property Name="ValidationBranchId" Type="int" />
+          <Property Name="ValidationUserId" Type="int" />
+          <Property Name="ValidationDate" Type="datetime" />
+          <Property Name="IsValid" Type="bit" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GrolValidation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GrolId" Type="int" Nullable="false" />
+          <Property Name="MaxPageCount" Type="int" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HeadBranch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchStateId" Type="tinyint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SourceId" Type="int" />
+          <Property Name="IsClosed" Type="bit" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="CreationComment" Type="nvarchar" MaxLength="332" Nullable="false" />
+          <Property Name="DeletionDate" Type="datetime" />
+          <Property Name="DeletionComment" Type="nvarchar" MaxLength="255" />
+          <Property Name="CreationUserId" Type="int" Nullable="false" />
+          <Property Name="DeletionUserId" Type="int" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="License">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Licensee" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="LicenseKey" Type="varbinary(max)" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LPADocSuiteModule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ModuleName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsActivated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="CreationUserId" Type="int" Nullable="false" />
+          <Property Name="IsPublished" Type="bit" Nullable="false" />
+          <Property Name="WordContent" Type="varbinary(max)" Nullable="false" />
+          <Property Name="HtmlContent" Type="varbinary(max)" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="LanguageId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OutputFileType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="tinyint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Role2LPADocSuiteModule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="ModuleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Specialization">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParentId" Type="int" />
+          <Property Name="SpecName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="GuiName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Priority" Type="int" Nullable="false" />
+          <Property Name="Visible" Type="bit" Nullable="false" />
+          <Property Name="UniqueParent" Type="bit" />
+          <Property Name="Hint" Type="nvarchar" MaxLength="250" />
+          <Property Name="de" Type="nvarchar" MaxLength="50" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SpecValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="ParentId" Type="int" />
+          <Property Name="SpecializationId" Type="int" Nullable="false" />
+          <Property Name="SpecValue" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="de" Type="nvarchar" MaxLength="50" />
+          <Property Name="en" Type="nvarchar" MaxLength="50" />
+          <Property Name="es" Type="nvarchar" MaxLength="50" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SpecValueTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParentId" Type="int" />
+          <Property Name="SpecializationId" Type="int" Nullable="false" />
+          <Property Name="SpecValue" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserAccounts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="276" Nullable="false" />
+          <Property Name="IsAdmin" Type="bit" Nullable="false" />
+          <Property Name="CanCertify" Type="bit" Nullable="false" />
+          <Property Name="WorkingBranchId" Type="int" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="IsActivated" Type="bit" Nullable="false" />
+          <Property Name="ActiveFrom" Type="datetime" Nullable="false" />
+          <Property Name="ActiveTo" Type="datetime" />
+          <Property Name="Hash" Type="binary" MaxLength="32" />
+        </EntityType>
+        <EntityType Name="UserAccounts2License">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LicenseId" Type="int" Nullable="false" />
+          <Property Name="UserAccountsId" Type="int" Nullable="false" />
+          <Property Name="Used" Type="bit" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserGroupCache">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="276" Nullable="false" />
+          <Property Name="GroupSID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="Timestamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="UserGroups">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="276" Nullable="false" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkingBranch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchStateId" Type="tinyint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SourceId" Type="int" />
+          <Property Name="IsClosed" Type="bit" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="CreationComment" Type="nvarchar" MaxLength="332" Nullable="false" />
+          <Property Name="DeletionDate" Type="datetime" />
+          <Property Name="DeletionComment" Type="nvarchar" MaxLength="255" />
+          <Property Name="CreationUserId" Type="int" Nullable="false" />
+          <Property Name="DeletionUserId" Type="int" />
+          <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="IsHead" Type="bit" Nullable="false" />
+          <Property Name="HeadBranchId" Type="int" Nullable="false" />
+          <Property Name="BranchActionId" Type="tinyint" Nullable="false" />
+          <Property Name="MergedBranchId" Type="int" />
+        </EntityType>
+        <Association Name="FK_Commitment_CommitUserId">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="1" />
+          <End Role="Commitment" Type="Self.Commitment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Commitment">
+              <PropertyRef Name="CommitUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Commitment_HeadBranch_BranchId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="1" />
+          <End Role="Commitment" Type="Self.Commitment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Commitment">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocDes_UserAccounts2License_LicenseId_Id">
+          <End Role="License" Type="Self.License" Multiplicity="1" />
+          <End Role="UserAccounts2License" Type="Self.UserAccounts2License" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="License">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAccounts2License">
+              <PropertyRef Name="LicenseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocDes_UserAccounts2License_UserAccountsId_Id">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="1" />
+          <End Role="UserAccounts2License" Type="Self.UserAccounts2License" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAccounts2License">
+              <PropertyRef Name="UserAccountsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragBranch_CreationUserId">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="1" />
+          <End Role="FragBranch" Type="Self.FragBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragBranch">
+              <PropertyRef Name="CreationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragBranch_Fragment_FragId">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragBranch" Type="Self.FragBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragBranch">
+              <PropertyRef Name="FragId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragBranch_HeadBranch_BranchId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragBranch" Type="Self.FragBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragBranch">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragLock_Fragment_EditFragId">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="1" />
+          <End Role="FragLock" Type="Self.FragLock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragLock">
+              <PropertyRef Name="EditFragId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragLock_Fragment_FragId">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragLock" Type="Self.FragLock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragLock">
+              <PropertyRef Name="FragId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragLock_HeadBranch_BranchId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragLock" Type="Self.FragLock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragLock">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragLock_UserAccount">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="1" />
+          <End Role="FragLock" Type="Self.FragLock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragLock">
+              <PropertyRef Name="LockUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_Commitment_CommitmentId">
+          <End Role="Commitment" Type="Self.Commitment" Multiplicity="0..1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commitment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="CommitmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_FragType">
+          <End Role="FragType" Type="Self.FragType" Multiplicity="1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="FragTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_PrevFragID">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="0..1" />
+          <End Role="Fragment1" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment1">
+              <PropertyRef Name="PrevFragId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_Review">
+          <End Role="FragReview" Type="Self.FragReview" Multiplicity="0..1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragReview">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="FragReviewId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_ReviewInProgress">
+          <End Role="FragReviewInProgress" Type="Self.FragReviewInProgress" Multiplicity="0..1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragReviewInProgress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="ReviewInProgressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_State">
+          <End Role="FragState" Type="Self.FragState" Multiplicity="1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragState">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="FragStateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragRef_Fragment">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragRef" Type="Self.FragRef" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragRef">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragReview_ReviewerId">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="1" />
+          <End Role="FragReview" Type="Self.FragReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragReview">
+              <PropertyRef Name="ReviewerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragReviewInProgress_ReviewerId">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="1" />
+          <End Role="FragReviewInProgress" Type="Self.FragReviewInProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragReviewInProgress">
+              <PropertyRef Name="ReviewerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GROL_DocumentPrintLanguages">
+          <End Role="DocumentPrintLanguages" Type="Self.DocumentPrintLanguages" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GROL" Type="Self.GROL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocumentPrintLanguages">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="GROL">
+              <PropertyRef Name="LanguageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GROL_FragRef">
+          <End Role="FragRef" Type="Self.FragRef" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GROL" Type="Self.GROL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragRef">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GROL">
+              <PropertyRef Name="RootDocId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GROL_OutputFileType">
+          <End Role="OutputFileType" Type="Self.OutputFileType" Multiplicity="1" />
+          <End Role="GROL" Type="Self.GROL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OutputFileType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GROL">
+              <PropertyRef Name="OutputFileTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrolReleaseValidation_GROL">
+          <End Role="GROL" Type="Self.GROL" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GrolReleaseValidation" Type="Self.GrolReleaseValidation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GROL">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrolReleaseValidation">
+              <PropertyRef Name="GrolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrolReleaseValidation_UserAccounts">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="0..1" />
+          <End Role="GrolReleaseValidation" Type="Self.GrolReleaseValidation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GrolReleaseValidation">
+              <PropertyRef Name="ValidationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrolReleaseValidation_WorkingBranch">
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="0..1" />
+          <End Role="GrolReleaseValidation" Type="Self.GrolReleaseValidation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkingBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GrolReleaseValidation">
+              <PropertyRef Name="ValidationBranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrolValidation_GROL">
+          <End Role="GROL" Type="Self.GROL" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GrolValidation" Type="Self.GrolValidation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GROL">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrolValidation">
+              <PropertyRef Name="GrolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HeadBranch_BranchState_BranchStateId">
+          <End Role="BranchState" Type="Self.BranchState" Multiplicity="1" />
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BranchState">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HeadBranch">
+              <PropertyRef Name="BranchStateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HeadBranch_CreationUserId">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="1" />
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HeadBranch">
+              <PropertyRef Name="CreationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HeadBranch_DeletionUserId">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="0..1" />
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HeadBranch">
+              <PropertyRef Name="DeletionUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HeadBranch_HeadBranch_SourceId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="0..1" />
+          <End Role="HeadBranch1" Type="Self.HeadBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HeadBranch1">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_News_UserAccounts_CreationUserId">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="1" />
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="CreationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role2LPADocSuiteModule_LPADocSuiteModuleId">
+          <End Role="LPADocSuiteModule" Type="Self.LPADocSuiteModule" Multiplicity="1" />
+          <End Role="Role2LPADocSuiteModule" Type="Self.Role2LPADocSuiteModule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LPADocSuiteModule">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Role2LPADocSuiteModule">
+              <PropertyRef Name="ModuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Specialization_Specialization_ParentId">
+          <End Role="Specialization" Type="Self.Specialization" Multiplicity="0..1" />
+          <End Role="Specialization1" Type="Self.Specialization" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialization">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Specialization1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValue_Branch_BranchId">
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SpecValue" Type="Self.SpecValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkingBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValue">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValue_Specialization_SpecializationId">
+          <End Role="Specialization" Type="Self.Specialization" Multiplicity="1" />
+          <End Role="SpecValue" Type="Self.SpecValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialization">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValue">
+              <PropertyRef Name="SpecializationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValue_SpecValue_ParentId">
+          <End Role="SpecValue" Type="Self.SpecValue" Multiplicity="0..1" />
+          <End Role="SpecValue1" Type="Self.SpecValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpecValue">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValue1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValueTemplate_Specialization_SpecializationId">
+          <End Role="Specialization" Type="Self.Specialization" Multiplicity="1" />
+          <End Role="SpecValueTemplate" Type="Self.SpecValueTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialization">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValueTemplate">
+              <PropertyRef Name="SpecializationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValueTemplate_SpecValueTemplate_ParentId">
+          <End Role="SpecValueTemplate" Type="Self.SpecValueTemplate" Multiplicity="0..1" />
+          <End Role="SpecValueTemplate1" Type="Self.SpecValueTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpecValueTemplate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValueTemplate1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAccounts_WorkingBranch_WorkingBranchId">
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="1" />
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkingBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAccounts">
+              <PropertyRef Name="WorkingBranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_BranchActionId">
+          <End Role="BranchAction" Type="Self.BranchAction" Multiplicity="1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BranchAction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="BranchActionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_BranchState_BranchStateId">
+          <End Role="BranchState" Type="Self.BranchState" Multiplicity="1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BranchState">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="BranchStateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_CreationUserId">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="CreationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_DeletionUserId">
+          <End Role="UserAccounts" Type="Self.UserAccounts" Multiplicity="0..1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="DeletionUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_HeadBranch_HeadBranchId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="HeadBranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_WorkingBranch_SourceId">
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="0..1" />
+          <End Role="WorkingBranch1" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkingBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch1">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Nordea_Abnahme_DocDesignerModelStoreContainer">
+          <EntitySet Name="BranchAction" EntityType="Self.BranchAction" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="BranchState" EntityType="Self.BranchState" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="Commitment" EntityType="Self.Commitment" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="DocumentPrintLanguages" EntityType="Self.DocumentPrintLanguages" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="FragBranch" EntityType="Self.FragBranch" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="FragLock" EntityType="Self.FragLock" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="Fragment" EntityType="Self.Fragment" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="FragmentCache" EntityType="Self.FragmentCache" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="FragmentCacheItem" EntityType="Self.FragmentCacheItem" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="FragRef" EntityType="Self.FragRef" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="FragReview" EntityType="Self.FragReview" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="FragReviewInProgress" EntityType="Self.FragReviewInProgress" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="FragState" EntityType="Self.FragState" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="FragType" EntityType="Self.FragType" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="GROL" EntityType="Self.GROL" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="GrolReleaseValidation" EntityType="Self.GrolReleaseValidation" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="GrolValidation" EntityType="Self.GrolValidation" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="HeadBranch" EntityType="Self.HeadBranch" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="License" EntityType="Self.License" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="LPADocSuiteModule" EntityType="Self.LPADocSuiteModule" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="News" EntityType="Self.News" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="OutputFileType" EntityType="Self.OutputFileType" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="Role2LPADocSuiteModule" EntityType="Self.Role2LPADocSuiteModule" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="Specialization" EntityType="Self.Specialization" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="SpecValue" EntityType="Self.SpecValue" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="SpecValueTemplate" EntityType="Self.SpecValueTemplate" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="UserAccounts" EntityType="Self.UserAccounts" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="UserAccounts2License" EntityType="Self.UserAccounts2License" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="UserGroupCache" EntityType="Self.UserGroupCache" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" Schema="DocDes" store:Type="Tables" />
+          <EntitySet Name="WorkingBranch" EntityType="Self.WorkingBranch" Schema="DocDes" store:Type="Tables" />
+          <AssociationSet Name="FK_Commitment_CommitUserId" Association="Self.FK_Commitment_CommitUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="Commitment" EntitySet="Commitment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Commitment_HeadBranch_BranchId" Association="Self.FK_Commitment_HeadBranch_BranchId">
+            <End Role="HeadBranch" EntitySet="HeadBranch" />
+            <End Role="Commitment" EntitySet="Commitment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocDes_UserAccounts2License_LicenseId_Id" Association="Self.FK_DocDes_UserAccounts2License_LicenseId_Id">
+            <End Role="License" EntitySet="License" />
+            <End Role="UserAccounts2License" EntitySet="UserAccounts2License" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocDes_UserAccounts2License_UserAccountsId_Id" Association="Self.FK_DocDes_UserAccounts2License_UserAccountsId_Id">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="UserAccounts2License" EntitySet="UserAccounts2License" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragBranch_CreationUserId" Association="Self.FK_FragBranch_CreationUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="FragBranch" EntitySet="FragBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragBranch_Fragment_FragId" Association="Self.FK_FragBranch_Fragment_FragId">
+            <End Role="Fragment" EntitySet="Fragment" />
+            <End Role="FragBranch" EntitySet="FragBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragBranch_HeadBranch_BranchId" Association="Self.FK_FragBranch_HeadBranch_BranchId">
+            <End Role="HeadBranch" EntitySet="HeadBranch" />
+            <End Role="FragBranch" EntitySet="FragBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragLock_Fragment_EditFragId" Association="Self.FK_FragLock_Fragment_EditFragId">
+            <End Role="Fragment" EntitySet="Fragment" />
+            <End Role="FragLock" EntitySet="FragLock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragLock_Fragment_FragId" Association="Self.FK_FragLock_Fragment_FragId">
+            <End Role="Fragment" EntitySet="Fragment" />
+            <End Role="FragLock" EntitySet="FragLock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragLock_HeadBranch_BranchId" Association="Self.FK_FragLock_HeadBranch_BranchId">
+            <End Role="HeadBranch" EntitySet="HeadBranch" />
+            <End Role="FragLock" EntitySet="FragLock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragLock_UserAccount" Association="Self.FK_FragLock_UserAccount">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="FragLock" EntitySet="FragLock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_Commitment_CommitmentId" Association="Self.FK_Fragment_Commitment_CommitmentId">
+            <End Role="Commitment" EntitySet="Commitment" />
+            <End Role="Fragment" EntitySet="Fragment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_FragType" Association="Self.FK_Fragment_FragType">
+            <End Role="FragType" EntitySet="FragType" />
+            <End Role="Fragment" EntitySet="Fragment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_PrevFragID" Association="Self.FK_Fragment_PrevFragID">
+            <End Role="Fragment" EntitySet="Fragment" />
+            <End Role="Fragment1" EntitySet="Fragment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_Review" Association="Self.FK_Fragment_Review">
+            <End Role="FragReview" EntitySet="FragReview" />
+            <End Role="Fragment" EntitySet="Fragment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_ReviewInProgress" Association="Self.FK_Fragment_ReviewInProgress">
+            <End Role="FragReviewInProgress" EntitySet="FragReviewInProgress" />
+            <End Role="Fragment" EntitySet="Fragment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_State" Association="Self.FK_Fragment_State">
+            <End Role="FragState" EntitySet="FragState" />
+            <End Role="Fragment" EntitySet="Fragment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragRef_Fragment" Association="Self.FK_FragRef_Fragment">
+            <End Role="Fragment" EntitySet="Fragment" />
+            <End Role="FragRef" EntitySet="FragRef" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragReview_ReviewerId" Association="Self.FK_FragReview_ReviewerId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="FragReview" EntitySet="FragReview" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragReviewInProgress_ReviewerId" Association="Self.FK_FragReviewInProgress_ReviewerId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="FragReviewInProgress" EntitySet="FragReviewInProgress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GROL_DocumentPrintLanguages" Association="Self.FK_GROL_DocumentPrintLanguages">
+            <End Role="DocumentPrintLanguages" EntitySet="DocumentPrintLanguages" />
+            <End Role="GROL" EntitySet="GROL" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GROL_FragRef" Association="Self.FK_GROL_FragRef">
+            <End Role="FragRef" EntitySet="FragRef" />
+            <End Role="GROL" EntitySet="GROL" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GROL_OutputFileType" Association="Self.FK_GROL_OutputFileType">
+            <End Role="OutputFileType" EntitySet="OutputFileType" />
+            <End Role="GROL" EntitySet="GROL" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrolReleaseValidation_GROL" Association="Self.FK_GrolReleaseValidation_GROL">
+            <End Role="GROL" EntitySet="GROL" />
+            <End Role="GrolReleaseValidation" EntitySet="GrolReleaseValidation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrolReleaseValidation_UserAccounts" Association="Self.FK_GrolReleaseValidation_UserAccounts">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="GrolReleaseValidation" EntitySet="GrolReleaseValidation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrolReleaseValidation_WorkingBranch" Association="Self.FK_GrolReleaseValidation_WorkingBranch">
+            <End Role="WorkingBranch" EntitySet="WorkingBranch" />
+            <End Role="GrolReleaseValidation" EntitySet="GrolReleaseValidation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrolValidation_GROL" Association="Self.FK_GrolValidation_GROL">
+            <End Role="GROL" EntitySet="GROL" />
+            <End Role="GrolValidation" EntitySet="GrolValidation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HeadBranch_BranchState_BranchStateId" Association="Self.FK_HeadBranch_BranchState_BranchStateId">
+            <End Role="BranchState" EntitySet="BranchState" />
+            <End Role="HeadBranch" EntitySet="HeadBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HeadBranch_CreationUserId" Association="Self.FK_HeadBranch_CreationUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="HeadBranch" EntitySet="HeadBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HeadBranch_DeletionUserId" Association="Self.FK_HeadBranch_DeletionUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="HeadBranch" EntitySet="HeadBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HeadBranch_HeadBranch_SourceId" Association="Self.FK_HeadBranch_HeadBranch_SourceId">
+            <End Role="HeadBranch" EntitySet="HeadBranch" />
+            <End Role="HeadBranch1" EntitySet="HeadBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_News_UserAccounts_CreationUserId" Association="Self.FK_News_UserAccounts_CreationUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role2LPADocSuiteModule_LPADocSuiteModuleId" Association="Self.FK_Role2LPADocSuiteModule_LPADocSuiteModuleId">
+            <End Role="LPADocSuiteModule" EntitySet="LPADocSuiteModule" />
+            <End Role="Role2LPADocSuiteModule" EntitySet="Role2LPADocSuiteModule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Specialization_Specialization_ParentId" Association="Self.FK_Specialization_Specialization_ParentId">
+            <End Role="Specialization" EntitySet="Specialization" />
+            <End Role="Specialization1" EntitySet="Specialization" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValue_Branch_BranchId" Association="Self.FK_SpecValue_Branch_BranchId">
+            <End Role="WorkingBranch" EntitySet="WorkingBranch" />
+            <End Role="SpecValue" EntitySet="SpecValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValue_Specialization_SpecializationId" Association="Self.FK_SpecValue_Specialization_SpecializationId">
+            <End Role="Specialization" EntitySet="Specialization" />
+            <End Role="SpecValue" EntitySet="SpecValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValue_SpecValue_ParentId" Association="Self.FK_SpecValue_SpecValue_ParentId">
+            <End Role="SpecValue" EntitySet="SpecValue" />
+            <End Role="SpecValue1" EntitySet="SpecValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValueTemplate_Specialization_SpecializationId" Association="Self.FK_SpecValueTemplate_Specialization_SpecializationId">
+            <End Role="Specialization" EntitySet="Specialization" />
+            <End Role="SpecValueTemplate" EntitySet="SpecValueTemplate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValueTemplate_SpecValueTemplate_ParentId" Association="Self.FK_SpecValueTemplate_SpecValueTemplate_ParentId">
+            <End Role="SpecValueTemplate" EntitySet="SpecValueTemplate" />
+            <End Role="SpecValueTemplate1" EntitySet="SpecValueTemplate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAccounts_WorkingBranch_WorkingBranchId" Association="Self.FK_UserAccounts_WorkingBranch_WorkingBranchId">
+            <End Role="WorkingBranch" EntitySet="WorkingBranch" />
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_BranchActionId" Association="Self.FK_WorkingBranch_BranchActionId">
+            <End Role="BranchAction" EntitySet="BranchAction" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_BranchState_BranchStateId" Association="Self.FK_WorkingBranch_BranchState_BranchStateId">
+            <End Role="BranchState" EntitySet="BranchState" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_CreationUserId" Association="Self.FK_WorkingBranch_CreationUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_DeletionUserId" Association="Self.FK_WorkingBranch_DeletionUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_HeadBranch_HeadBranchId" Association="Self.FK_WorkingBranch_HeadBranch_HeadBranchId">
+            <End Role="HeadBranch" EntitySet="HeadBranch" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_WorkingBranch_SourceId" Association="Self.FK_WorkingBranch_WorkingBranch_SourceId">
+            <End Role="WorkingBranch" EntitySet="WorkingBranch" />
+            <End Role="WorkingBranch1" EntitySet="WorkingBranch" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Nordea_Abnahme_DocDesignerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BranchAction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Byte" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="WorkingBranches" Relationship="Self.FK_WorkingBranch_BranchActionId" FromRole="BranchAction" ToRole="WorkingBranch" />
+        </EntityType>
+        <EntityType Name="BranchState">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Byte" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="HeadBranches" Relationship="Self.FK_HeadBranch_BranchState_BranchStateId" FromRole="BranchState" ToRole="HeadBranch" />
+          <NavigationProperty Name="WorkingBranches" Relationship="Self.FK_WorkingBranch_BranchState_BranchStateId" FromRole="BranchState" ToRole="WorkingBranch" />
+        </EntityType>
+        <EntityType Name="Commitment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="CommitDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CommitComment" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CommitUserId" Type="Int32" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_Commitment_CommitUserId" FromRole="Commitment" ToRole="UserAccounts" />
+          <NavigationProperty Name="HeadBranch" Relationship="Self.FK_Commitment_HeadBranch_BranchId" FromRole="Commitment" ToRole="HeadBranch" />
+          <NavigationProperty Name="Fragments" Relationship="Self.FK_Fragment_Commitment_CommitmentId" FromRole="Commitment" ToRole="Fragment" />
+        </EntityType>
+        <EntityType Name="DocumentPrintLanguage">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LanguageLabel" Type="String" MaxLength="9" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="GROLs" Relationship="Self.FK_GROL_DocumentPrintLanguages" FromRole="DocumentPrintLanguages" ToRole="GROL" />
+        </EntityType>
+        <EntityType Name="FragBranch">
+          <Key>
+            <PropertyRef Name="BranchId" />
+            <PropertyRef Name="FragId" />
+          </Key>
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="IsHead" Type="Boolean" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreationComment" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationUserId" Type="Int32" Nullable="false" />
+          <Property Name="FragId" Type="Int32" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="IsTranslated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_FragBranch_CreationUserId" FromRole="FragBranch" ToRole="UserAccounts" />
+          <NavigationProperty Name="Fragment" Relationship="Self.FK_FragBranch_Fragment_FragId" FromRole="FragBranch" ToRole="Fragment" />
+          <NavigationProperty Name="HeadBranch" Relationship="Self.FK_FragBranch_HeadBranch_BranchId" FromRole="FragBranch" ToRole="HeadBranch" />
+        </EntityType>
+        <EntityType Name="FragLock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="LockDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReadOnly" Type="Boolean" Nullable="false" />
+          <Property Name="LockUserId" Type="Int32" Nullable="false" />
+          <Property Name="FragId" Type="Int32" />
+          <Property Name="EditFragId" Type="Int32" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Fragment" Relationship="Self.FK_FragLock_Fragment_EditFragId" FromRole="FragLock" ToRole="Fragment" />
+          <NavigationProperty Name="Fragment1" Relationship="Self.FK_FragLock_Fragment_FragId" FromRole="FragLock" ToRole="Fragment" />
+          <NavigationProperty Name="HeadBranch" Relationship="Self.FK_FragLock_HeadBranch_BranchId" FromRole="FragLock" ToRole="HeadBranch" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_FragLock_UserAccount" FromRole="FragLock" ToRole="UserAccounts" />
+        </EntityType>
+        <EntityType Name="Fragment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="FragContent" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="Priority" Type="Double" Nullable="false" />
+          <Property Name="FragName" Type="String" MaxLength="120" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Lang" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Bank" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Layout" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Modul" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProdGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProdSubGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Product" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerOp" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition3" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition4" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition5" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition6" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="FragTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ContentText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MetaData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsCertified" Type="Boolean" Nullable="false" />
+          <Property Name="FragAlias" Type="String" MaxLength="120" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Culture" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Condition7" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CommitmentId" Type="Int32" />
+          <Property Name="IsClone" Type="Boolean" Nullable="false" />
+          <Property Name="FragReviewId" Type="Int32" />
+          <Property Name="FragStateId" Type="Byte" Nullable="false" />
+          <Property Name="ReviewInProgressId" Type="Int32" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PrevFragId" Type="Int32" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="IsStatic" Type="Boolean" Nullable="false" />
+          <Property Name="AppContext" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FragHash" Type="Binary" MaxLength="16" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Translate" Type="Boolean" />
+          <NavigationProperty Name="Commitment" Relationship="Self.FK_Fragment_Commitment_CommitmentId" FromRole="Fragment" ToRole="Commitment" />
+          <NavigationProperty Name="FragBranches" Relationship="Self.FK_FragBranch_Fragment_FragId" FromRole="Fragment" ToRole="FragBranch" />
+          <NavigationProperty Name="FragLocks" Relationship="Self.FK_FragLock_Fragment_EditFragId" FromRole="Fragment" ToRole="FragLock" />
+          <NavigationProperty Name="FragLocks1" Relationship="Self.FK_FragLock_Fragment_FragId" FromRole="Fragment" ToRole="FragLock" />
+          <NavigationProperty Name="FragType" Relationship="Self.FK_Fragment_FragType" FromRole="Fragment" ToRole="FragType" />
+          <NavigationProperty Name="Fragment1" Relationship="Self.FK_Fragment_PrevFragID" FromRole="Fragment" ToRole="Fragment1" />
+          <NavigationProperty Name="Fragment2" Relationship="Self.FK_Fragment_PrevFragID" FromRole="Fragment1" ToRole="Fragment" />
+          <NavigationProperty Name="FragReview" Relationship="Self.FK_Fragment_Review" FromRole="Fragment" ToRole="FragReview" />
+          <NavigationProperty Name="FragReviewInProgress" Relationship="Self.FK_Fragment_ReviewInProgress" FromRole="Fragment" ToRole="FragReviewInProgress" />
+          <NavigationProperty Name="FragState" Relationship="Self.FK_Fragment_State" FromRole="Fragment" ToRole="FragState" />
+          <NavigationProperty Name="FragRefs" Relationship="Self.FK_FragRef_Fragment" FromRole="Fragment" ToRole="FragRef" />
+        </EntityType>
+        <EntityType Name="FragmentCache">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FragHash" Type="Binary" MaxLength="16" FixedLength="true" Nullable="false" />
+          <Property Name="FragName" Type="String" MaxLength="120" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Lang" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Culture" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="BankGroup" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Bank" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="UserGroup" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Layout" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Modul" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProdGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProdSubGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Product" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerOp" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition3" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition4" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition5" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition6" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Condition7" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AppContext" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragmentCacheItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FragmentCacheId" Type="Int32" Nullable="false" />
+          <Property Name="FragId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FragRef">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Position" Type="Int32" Nullable="false" />
+          <Property Name="ChildName" Type="String" MaxLength="160" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ChildAlias" Type="String" MaxLength="120" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DisplayExpression" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="BookMark" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="TargetFrame" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentId" Type="Int32" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Fragment" Relationship="Self.FK_FragRef_Fragment" FromRole="FragRef" ToRole="Fragment" />
+          <NavigationProperty Name="GROLs" Relationship="Self.FK_GROL_FragRef" FromRole="FragRef" ToRole="GROL" />
+        </EntityType>
+        <EntityType Name="FragReview">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReviewedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Comment" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsAccepted" Type="Boolean" Nullable="false" />
+          <Property Name="ReviewerId" Type="Int32" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Fragments" Relationship="Self.FK_Fragment_Review" FromRole="FragReview" ToRole="Fragment" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_FragReview_ReviewerId" FromRole="FragReview" ToRole="UserAccounts" />
+        </EntityType>
+        <EntityType Name="FragReviewInProgress">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InReviewSince" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReviewerId" Type="Int32" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Fragments" Relationship="Self.FK_Fragment_ReviewInProgress" FromRole="FragReviewInProgress" ToRole="Fragment" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_FragReviewInProgress_ReviewerId" FromRole="FragReviewInProgress" ToRole="UserAccounts" />
+        </EntityType>
+        <EntityType Name="FragState">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Byte" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Fragments" Relationship="Self.FK_Fragment_State" FromRole="FragState" ToRole="Fragment" />
+        </EntityType>
+        <EntityType Name="FragType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Label" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Fragments" Relationship="Self.FK_Fragment_FragType" FromRole="FragType" ToRole="Fragment" />
+        </EntityType>
+        <EntityType Name="GROL">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RootDocId" Type="Int32" />
+          <Property Name="OutputFileTypeId" Type="Byte" Nullable="false" />
+          <Property Name="LanguageId" Type="Int32" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="StaticDocName" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AppContext" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BankGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Bank" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Layout" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CultureFormatName" Type="String" MaxLength="120" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="DocumentPrintLanguage" Relationship="Self.FK_GROL_DocumentPrintLanguages" FromRole="GROL" ToRole="DocumentPrintLanguages" />
+          <NavigationProperty Name="FragRef" Relationship="Self.FK_GROL_FragRef" FromRole="GROL" ToRole="FragRef" />
+          <NavigationProperty Name="OutputFileType" Relationship="Self.FK_GROL_OutputFileType" FromRole="GROL" ToRole="OutputFileType" />
+          <NavigationProperty Name="GrolReleaseValidations" Relationship="Self.FK_GrolReleaseValidation_GROL" FromRole="GROL" ToRole="GrolReleaseValidation" />
+          <NavigationProperty Name="GrolValidations" Relationship="Self.FK_GrolValidation_GROL" FromRole="GROL" ToRole="GrolValidation" />
+        </EntityType>
+        <EntityType Name="GrolReleaseValidation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GrolId" Type="Int32" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="Cond0" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cond1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cond2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cond3" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cond4" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cond5" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cond6" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cond7" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BranchCounter" Type="Int32" Nullable="false" />
+          <Property Name="ValidationBranchId" Type="Int32" />
+          <Property Name="ValidationUserId" Type="Int32" />
+          <Property Name="ValidationDate" Type="DateTime" Precision="3" />
+          <Property Name="IsValid" Type="Boolean" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="GROL" Relationship="Self.FK_GrolReleaseValidation_GROL" FromRole="GrolReleaseValidation" ToRole="GROL" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_GrolReleaseValidation_UserAccounts" FromRole="GrolReleaseValidation" ToRole="UserAccounts" />
+          <NavigationProperty Name="WorkingBranch" Relationship="Self.FK_GrolReleaseValidation_WorkingBranch" FromRole="GrolReleaseValidation" ToRole="WorkingBranch" />
+        </EntityType>
+        <EntityType Name="GrolValidation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GrolId" Type="Int32" Nullable="false" />
+          <Property Name="MaxPageCount" Type="Int32" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="GROL" Relationship="Self.FK_GrolValidation_GROL" FromRole="GrolValidation" ToRole="GROL" />
+        </EntityType>
+        <EntityType Name="HeadBranch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchStateId" Type="Byte" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SourceId" Type="Int32" />
+          <Property Name="IsClosed" Type="Boolean" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreationComment" Type="String" MaxLength="332" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DeletionDate" Type="DateTime" Precision="3" />
+          <Property Name="DeletionComment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CreationUserId" Type="Int32" Nullable="false" />
+          <Property Name="DeletionUserId" Type="Int32" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="BranchState" Relationship="Self.FK_HeadBranch_BranchState_BranchStateId" FromRole="HeadBranch" ToRole="BranchState" />
+          <NavigationProperty Name="Commitments" Relationship="Self.FK_Commitment_HeadBranch_BranchId" FromRole="HeadBranch" ToRole="Commitment" />
+          <NavigationProperty Name="FragBranches" Relationship="Self.FK_FragBranch_HeadBranch_BranchId" FromRole="HeadBranch" ToRole="FragBranch" />
+          <NavigationProperty Name="FragLocks" Relationship="Self.FK_FragLock_HeadBranch_BranchId" FromRole="HeadBranch" ToRole="FragLock" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_HeadBranch_CreationUserId" FromRole="HeadBranch" ToRole="UserAccounts" />
+          <NavigationProperty Name="UserAccount1" Relationship="Self.FK_HeadBranch_DeletionUserId" FromRole="HeadBranch" ToRole="UserAccounts" />
+          <NavigationProperty Name="HeadBranch1" Relationship="Self.FK_HeadBranch_HeadBranch_SourceId" FromRole="HeadBranch" ToRole="HeadBranch1" />
+          <NavigationProperty Name="HeadBranch2" Relationship="Self.FK_HeadBranch_HeadBranch_SourceId" FromRole="HeadBranch1" ToRole="HeadBranch" />
+          <NavigationProperty Name="WorkingBranches" Relationship="Self.FK_WorkingBranch_HeadBranch_HeadBranchId" FromRole="HeadBranch" ToRole="WorkingBranch" />
+        </EntityType>
+        <EntityType Name="License">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Licensee" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductName" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LicenseKey" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="UserAccounts2License" Relationship="Self.FK_DocDes_UserAccounts2License_LicenseId_Id" FromRole="License" ToRole="UserAccounts2License" />
+        </EntityType>
+        <EntityType Name="LPADocSuiteModule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ModuleName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActivated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Role2LPADocSuiteModule" Relationship="Self.FK_Role2LPADocSuiteModule_LPADocSuiteModuleId" FromRole="LPADocSuiteModule" ToRole="Role2LPADocSuiteModule" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreationUserId" Type="Int32" Nullable="false" />
+          <Property Name="IsPublished" Type="Boolean" Nullable="false" />
+          <Property Name="WordContent" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="HtmlContent" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="LanguageId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_News_UserAccounts_CreationUserId" FromRole="News" ToRole="UserAccounts" />
+        </EntityType>
+        <EntityType Name="OutputFileType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Byte" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GROLs" Relationship="Self.FK_GROL_OutputFileType" FromRole="OutputFileType" ToRole="GROL" />
+        </EntityType>
+        <EntityType Name="Role2LPADocSuiteModule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="ModuleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="LPADocSuiteModule" Relationship="Self.FK_Role2LPADocSuiteModule_LPADocSuiteModuleId" FromRole="Role2LPADocSuiteModule" ToRole="LPADocSuiteModule" />
+        </EntityType>
+        <EntityType Name="Specialization">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentId" Type="Int32" />
+          <Property Name="SpecName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GuiName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Priority" Type="Int32" Nullable="false" />
+          <Property Name="Visible" Type="Boolean" Nullable="false" />
+          <Property Name="UniqueParent" Type="Boolean" />
+          <Property Name="Hint" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="de" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Specialization1" Relationship="Self.FK_Specialization_Specialization_ParentId" FromRole="Specialization" ToRole="Specialization1" />
+          <NavigationProperty Name="Specialization2" Relationship="Self.FK_Specialization_Specialization_ParentId" FromRole="Specialization1" ToRole="Specialization" />
+          <NavigationProperty Name="SpecValues" Relationship="Self.FK_SpecValue_Specialization_SpecializationId" FromRole="Specialization" ToRole="SpecValue" />
+          <NavigationProperty Name="SpecValueTemplates" Relationship="Self.FK_SpecValueTemplate_Specialization_SpecializationId" FromRole="Specialization" ToRole="SpecValueTemplate" />
+        </EntityType>
+        <EntityType Name="SpecValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="ParentId" Type="Int32" />
+          <Property Name="SpecializationId" Type="Int32" Nullable="false" />
+          <Property Name="SpecValue1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="de" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="en" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="es" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Specialization" Relationship="Self.FK_SpecValue_Specialization_SpecializationId" FromRole="SpecValue" ToRole="Specialization" />
+          <NavigationProperty Name="WorkingBranch" Relationship="Self.FK_SpecValue_Branch_BranchId" FromRole="SpecValue" ToRole="WorkingBranch" />
+          <NavigationProperty Name="SpecValue11" Relationship="Self.FK_SpecValue_SpecValue_ParentId" FromRole="SpecValue" ToRole="SpecValue1" />
+          <NavigationProperty Name="SpecValue2" Relationship="Self.FK_SpecValue_SpecValue_ParentId" FromRole="SpecValue1" ToRole="SpecValue" />
+        </EntityType>
+        <EntityType Name="SpecValueTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentId" Type="Int32" />
+          <Property Name="SpecializationId" Type="Int32" Nullable="false" />
+          <Property Name="SpecValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Specialization" Relationship="Self.FK_SpecValueTemplate_Specialization_SpecializationId" FromRole="SpecValueTemplate" ToRole="Specialization" />
+          <NavigationProperty Name="SpecValueTemplate1" Relationship="Self.FK_SpecValueTemplate_SpecValueTemplate_ParentId" FromRole="SpecValueTemplate" ToRole="SpecValueTemplate1" />
+          <NavigationProperty Name="SpecValueTemplate2" Relationship="Self.FK_SpecValueTemplate_SpecValueTemplate_ParentId" FromRole="SpecValueTemplate1" ToRole="SpecValueTemplate" />
+        </EntityType>
+        <EntityType Name="UserAccount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="276" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
+          <Property Name="CanCertify" Type="Boolean" Nullable="false" />
+          <Property Name="WorkingBranchId" Type="Int32" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="IsActivated" Type="Boolean" Nullable="false" />
+          <Property Name="ActiveFrom" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ActiveTo" Type="DateTime" Precision="3" />
+          <Property Name="Hash" Type="Binary" MaxLength="32" FixedLength="true" />
+          <NavigationProperty Name="Commitments" Relationship="Self.FK_Commitment_CommitUserId" FromRole="UserAccounts" ToRole="Commitment" />
+          <NavigationProperty Name="FragBranches" Relationship="Self.FK_FragBranch_CreationUserId" FromRole="UserAccounts" ToRole="FragBranch" />
+          <NavigationProperty Name="FragLocks" Relationship="Self.FK_FragLock_UserAccount" FromRole="UserAccounts" ToRole="FragLock" />
+          <NavigationProperty Name="FragReviews" Relationship="Self.FK_FragReview_ReviewerId" FromRole="UserAccounts" ToRole="FragReview" />
+          <NavigationProperty Name="FragReviewInProgresses" Relationship="Self.FK_FragReviewInProgress_ReviewerId" FromRole="UserAccounts" ToRole="FragReviewInProgress" />
+          <NavigationProperty Name="GrolReleaseValidations" Relationship="Self.FK_GrolReleaseValidation_UserAccounts" FromRole="UserAccounts" ToRole="GrolReleaseValidation" />
+          <NavigationProperty Name="HeadBranches" Relationship="Self.FK_HeadBranch_CreationUserId" FromRole="UserAccounts" ToRole="HeadBranch" />
+          <NavigationProperty Name="HeadBranches1" Relationship="Self.FK_HeadBranch_DeletionUserId" FromRole="UserAccounts" ToRole="HeadBranch" />
+          <NavigationProperty Name="News" Relationship="Self.FK_News_UserAccounts_CreationUserId" FromRole="UserAccounts" ToRole="News" />
+          <NavigationProperty Name="UserAccounts2License" Relationship="Self.FK_DocDes_UserAccounts2License_UserAccountsId_Id" FromRole="UserAccounts" ToRole="UserAccounts2License" />
+          <NavigationProperty Name="WorkingBranch" Relationship="Self.FK_UserAccounts_WorkingBranch_WorkingBranchId" FromRole="UserAccounts" ToRole="WorkingBranch" />
+          <NavigationProperty Name="WorkingBranches" Relationship="Self.FK_WorkingBranch_CreationUserId" FromRole="UserAccounts" ToRole="WorkingBranch" />
+          <NavigationProperty Name="WorkingBranches1" Relationship="Self.FK_WorkingBranch_DeletionUserId" FromRole="UserAccounts" ToRole="WorkingBranch" />
+        </EntityType>
+        <EntityType Name="UserAccounts2License">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LicenseId" Type="Int32" Nullable="false" />
+          <Property Name="UserAccountsId" Type="Int32" Nullable="false" />
+          <Property Name="Used" Type="Boolean" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="License" Relationship="Self.FK_DocDes_UserAccounts2License_LicenseId_Id" FromRole="UserAccounts2License" ToRole="License" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_DocDes_UserAccounts2License_UserAccountsId_Id" FromRole="UserAccounts2License" ToRole="UserAccounts" />
+        </EntityType>
+        <EntityType Name="UserGroupCache">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupName" Type="String" MaxLength="276" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GroupSID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Timestamp" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupName" Type="String" MaxLength="276" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="WorkingBranch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchStateId" Type="Byte" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SourceId" Type="Int32" />
+          <Property Name="IsClosed" Type="Boolean" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreationComment" Type="String" MaxLength="332" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DeletionDate" Type="DateTime" Precision="3" />
+          <Property Name="DeletionComment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CreationUserId" Type="Int32" Nullable="false" />
+          <Property Name="DeletionUserId" Type="Int32" />
+          <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="IsHead" Type="Boolean" Nullable="false" />
+          <Property Name="HeadBranchId" Type="Int32" Nullable="false" />
+          <Property Name="BranchActionId" Type="Byte" Nullable="false" />
+          <Property Name="MergedBranchId" Type="Int32" />
+          <NavigationProperty Name="BranchAction" Relationship="Self.FK_WorkingBranch_BranchActionId" FromRole="WorkingBranch" ToRole="BranchAction" />
+          <NavigationProperty Name="BranchState" Relationship="Self.FK_WorkingBranch_BranchState_BranchStateId" FromRole="WorkingBranch" ToRole="BranchState" />
+          <NavigationProperty Name="GrolReleaseValidations" Relationship="Self.FK_GrolReleaseValidation_WorkingBranch" FromRole="WorkingBranch" ToRole="GrolReleaseValidation" />
+          <NavigationProperty Name="HeadBranch" Relationship="Self.FK_WorkingBranch_HeadBranch_HeadBranchId" FromRole="WorkingBranch" ToRole="HeadBranch" />
+          <NavigationProperty Name="SpecValues" Relationship="Self.FK_SpecValue_Branch_BranchId" FromRole="WorkingBranch" ToRole="SpecValue" />
+          <NavigationProperty Name="UserAccounts" Relationship="Self.FK_UserAccounts_WorkingBranch_WorkingBranchId" FromRole="WorkingBranch" ToRole="UserAccounts" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK_WorkingBranch_CreationUserId" FromRole="WorkingBranch" ToRole="UserAccounts" />
+          <NavigationProperty Name="UserAccount1" Relationship="Self.FK_WorkingBranch_DeletionUserId" FromRole="WorkingBranch" ToRole="UserAccounts" />
+          <NavigationProperty Name="WorkingBranch1" Relationship="Self.FK_WorkingBranch_WorkingBranch_SourceId" FromRole="WorkingBranch" ToRole="WorkingBranch1" />
+          <NavigationProperty Name="WorkingBranch2" Relationship="Self.FK_WorkingBranch_WorkingBranch_SourceId" FromRole="WorkingBranch1" ToRole="WorkingBranch" />
+        </EntityType>
+        <Association Name="FK_WorkingBranch_BranchActionId">
+          <End Role="BranchAction" Type="Self.BranchAction" Multiplicity="1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BranchAction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="BranchActionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HeadBranch_BranchState_BranchStateId">
+          <End Role="BranchState" Type="Self.BranchState" Multiplicity="1" />
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BranchState">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HeadBranch">
+              <PropertyRef Name="BranchStateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_BranchState_BranchStateId">
+          <End Role="BranchState" Type="Self.BranchState" Multiplicity="1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BranchState">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="BranchStateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Commitment_CommitUserId">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="Commitment" Type="Self.Commitment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Commitment">
+              <PropertyRef Name="CommitUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Commitment_HeadBranch_BranchId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="1" />
+          <End Role="Commitment" Type="Self.Commitment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Commitment">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_Commitment_CommitmentId">
+          <End Role="Commitment" Type="Self.Commitment" Multiplicity="0..1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commitment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="CommitmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GROL_DocumentPrintLanguages">
+          <End Role="DocumentPrintLanguages" Type="Self.DocumentPrintLanguage" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GROL" Type="Self.GROL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocumentPrintLanguages">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="GROL">
+              <PropertyRef Name="LanguageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragBranch_CreationUserId">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="FragBranch" Type="Self.FragBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragBranch">
+              <PropertyRef Name="CreationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragBranch_Fragment_FragId">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragBranch" Type="Self.FragBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragBranch">
+              <PropertyRef Name="FragId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragBranch_HeadBranch_BranchId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragBranch" Type="Self.FragBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragBranch">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragLock_Fragment_EditFragId">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="1" />
+          <End Role="FragLock" Type="Self.FragLock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragLock">
+              <PropertyRef Name="EditFragId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragLock_Fragment_FragId">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragLock" Type="Self.FragLock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragLock">
+              <PropertyRef Name="FragId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragLock_HeadBranch_BranchId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragLock" Type="Self.FragLock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragLock">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragLock_UserAccount">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="FragLock" Type="Self.FragLock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragLock">
+              <PropertyRef Name="LockUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_FragType">
+          <End Role="FragType" Type="Self.FragType" Multiplicity="1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="FragTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_PrevFragID">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="0..1" />
+          <End Role="Fragment1" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment1">
+              <PropertyRef Name="PrevFragId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_Review">
+          <End Role="FragReview" Type="Self.FragReview" Multiplicity="0..1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragReview">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="FragReviewId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_ReviewInProgress">
+          <End Role="FragReviewInProgress" Type="Self.FragReviewInProgress" Multiplicity="0..1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragReviewInProgress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="ReviewInProgressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fragment_State">
+          <End Role="FragState" Type="Self.FragState" Multiplicity="1" />
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragState">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fragment">
+              <PropertyRef Name="FragStateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragRef_Fragment">
+          <End Role="Fragment" Type="Self.Fragment" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FragRef" Type="Self.FragRef" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fragment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragRef">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GROL_FragRef">
+          <End Role="FragRef" Type="Self.FragRef" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GROL" Type="Self.GROL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FragRef">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GROL">
+              <PropertyRef Name="RootDocId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragReview_ReviewerId">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="FragReview" Type="Self.FragReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragReview">
+              <PropertyRef Name="ReviewerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FragReviewInProgress_ReviewerId">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="FragReviewInProgress" Type="Self.FragReviewInProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FragReviewInProgress">
+              <PropertyRef Name="ReviewerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GROL_OutputFileType">
+          <End Role="OutputFileType" Type="Self.OutputFileType" Multiplicity="1" />
+          <End Role="GROL" Type="Self.GROL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OutputFileType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GROL">
+              <PropertyRef Name="OutputFileTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrolReleaseValidation_GROL">
+          <End Role="GROL" Type="Self.GROL" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GrolReleaseValidation" Type="Self.GrolReleaseValidation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GROL">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrolReleaseValidation">
+              <PropertyRef Name="GrolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrolValidation_GROL">
+          <End Role="GROL" Type="Self.GROL" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GrolValidation" Type="Self.GrolValidation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GROL">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrolValidation">
+              <PropertyRef Name="GrolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrolReleaseValidation_UserAccounts">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="GrolReleaseValidation" Type="Self.GrolReleaseValidation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GrolReleaseValidation">
+              <PropertyRef Name="ValidationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrolReleaseValidation_WorkingBranch">
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="0..1" />
+          <End Role="GrolReleaseValidation" Type="Self.GrolReleaseValidation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkingBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GrolReleaseValidation">
+              <PropertyRef Name="ValidationBranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HeadBranch_CreationUserId">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HeadBranch">
+              <PropertyRef Name="CreationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HeadBranch_DeletionUserId">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HeadBranch">
+              <PropertyRef Name="DeletionUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HeadBranch_HeadBranch_SourceId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="0..1" />
+          <End Role="HeadBranch1" Type="Self.HeadBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HeadBranch1">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_HeadBranch_HeadBranchId">
+          <End Role="HeadBranch" Type="Self.HeadBranch" Multiplicity="1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HeadBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="HeadBranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocDes_UserAccounts2License_LicenseId_Id">
+          <End Role="License" Type="Self.License" Multiplicity="1" />
+          <End Role="UserAccounts2License" Type="Self.UserAccounts2License" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="License">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAccounts2License">
+              <PropertyRef Name="LicenseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role2LPADocSuiteModule_LPADocSuiteModuleId">
+          <End Role="LPADocSuiteModule" Type="Self.LPADocSuiteModule" Multiplicity="1" />
+          <End Role="Role2LPADocSuiteModule" Type="Self.Role2LPADocSuiteModule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LPADocSuiteModule">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Role2LPADocSuiteModule">
+              <PropertyRef Name="ModuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_News_UserAccounts_CreationUserId">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="CreationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Specialization_Specialization_ParentId">
+          <End Role="Specialization" Type="Self.Specialization" Multiplicity="0..1" />
+          <End Role="Specialization1" Type="Self.Specialization" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialization">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Specialization1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValue_Specialization_SpecializationId">
+          <End Role="Specialization" Type="Self.Specialization" Multiplicity="1" />
+          <End Role="SpecValue" Type="Self.SpecValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialization">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValue">
+              <PropertyRef Name="SpecializationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValueTemplate_Specialization_SpecializationId">
+          <End Role="Specialization" Type="Self.Specialization" Multiplicity="1" />
+          <End Role="SpecValueTemplate" Type="Self.SpecValueTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialization">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValueTemplate">
+              <PropertyRef Name="SpecializationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValue_Branch_BranchId">
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SpecValue" Type="Self.SpecValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkingBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValue">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValue_SpecValue_ParentId">
+          <End Role="SpecValue" Type="Self.SpecValue" Multiplicity="0..1" />
+          <End Role="SpecValue1" Type="Self.SpecValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpecValue">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValue1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecValueTemplate_SpecValueTemplate_ParentId">
+          <End Role="SpecValueTemplate" Type="Self.SpecValueTemplate" Multiplicity="0..1" />
+          <End Role="SpecValueTemplate1" Type="Self.SpecValueTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpecValueTemplate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SpecValueTemplate1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocDes_UserAccounts2License_UserAccountsId_Id">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="UserAccounts2License" Type="Self.UserAccounts2License" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAccounts2License">
+              <PropertyRef Name="UserAccountsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAccounts_WorkingBranch_WorkingBranchId">
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="1" />
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkingBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserAccounts">
+              <PropertyRef Name="WorkingBranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_CreationUserId">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="CreationUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_DeletionUserId">
+          <End Role="UserAccounts" Type="Self.UserAccount" Multiplicity="0..1" />
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccounts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch">
+              <PropertyRef Name="DeletionUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkingBranch_WorkingBranch_SourceId">
+          <End Role="WorkingBranch" Type="Self.WorkingBranch" Multiplicity="0..1" />
+          <End Role="WorkingBranch1" Type="Self.WorkingBranch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkingBranch">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkingBranch1">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DocDesignerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BranchActions" EntityType="Self.BranchAction" />
+          <EntitySet Name="BranchStates" EntityType="Self.BranchState" />
+          <EntitySet Name="Commitments" EntityType="Self.Commitment" />
+          <EntitySet Name="DocumentPrintLanguages" EntityType="Self.DocumentPrintLanguage" />
+          <EntitySet Name="FragBranches" EntityType="Self.FragBranch" />
+          <EntitySet Name="FragLocks" EntityType="Self.FragLock" />
+          <EntitySet Name="Fragments" EntityType="Self.Fragment" />
+          <EntitySet Name="FragmentCaches" EntityType="Self.FragmentCache" />
+          <EntitySet Name="FragmentCacheItems" EntityType="Self.FragmentCacheItem" />
+          <EntitySet Name="FragRefs" EntityType="Self.FragRef" />
+          <EntitySet Name="FragReviews" EntityType="Self.FragReview" />
+          <EntitySet Name="FragReviewInProgresses" EntityType="Self.FragReviewInProgress" />
+          <EntitySet Name="FragStates" EntityType="Self.FragState" />
+          <EntitySet Name="FragTypes" EntityType="Self.FragType" />
+          <EntitySet Name="GROLs" EntityType="Self.GROL" />
+          <EntitySet Name="GrolReleaseValidations" EntityType="Self.GrolReleaseValidation" />
+          <EntitySet Name="GrolValidations" EntityType="Self.GrolValidation" />
+          <EntitySet Name="HeadBranches" EntityType="Self.HeadBranch" />
+          <EntitySet Name="Licenses" EntityType="Self.License" />
+          <EntitySet Name="LPADocSuiteModules" EntityType="Self.LPADocSuiteModule" />
+          <EntitySet Name="News" EntityType="Self.News" />
+          <EntitySet Name="OutputFileTypes" EntityType="Self.OutputFileType" />
+          <EntitySet Name="Role2LPADocSuiteModule" EntityType="Self.Role2LPADocSuiteModule" />
+          <EntitySet Name="Specializations" EntityType="Self.Specialization" />
+          <EntitySet Name="SpecValues" EntityType="Self.SpecValue" />
+          <EntitySet Name="SpecValueTemplates" EntityType="Self.SpecValueTemplate" />
+          <EntitySet Name="UserAccounts" EntityType="Self.UserAccount" />
+          <EntitySet Name="UserAccounts2License" EntityType="Self.UserAccounts2License" />
+          <EntitySet Name="UserGroupCaches" EntityType="Self.UserGroupCache" />
+          <EntitySet Name="UserGroups" EntityType="Self.UserGroup" />
+          <EntitySet Name="WorkingBranches" EntityType="Self.WorkingBranch" />
+          <AssociationSet Name="FK_WorkingBranch_BranchActionId" Association="Self.FK_WorkingBranch_BranchActionId">
+            <End Role="BranchAction" EntitySet="BranchActions" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HeadBranch_BranchState_BranchStateId" Association="Self.FK_HeadBranch_BranchState_BranchStateId">
+            <End Role="BranchState" EntitySet="BranchStates" />
+            <End Role="HeadBranch" EntitySet="HeadBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_BranchState_BranchStateId" Association="Self.FK_WorkingBranch_BranchState_BranchStateId">
+            <End Role="BranchState" EntitySet="BranchStates" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Commitment_CommitUserId" Association="Self.FK_Commitment_CommitUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="Commitment" EntitySet="Commitments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Commitment_HeadBranch_BranchId" Association="Self.FK_Commitment_HeadBranch_BranchId">
+            <End Role="HeadBranch" EntitySet="HeadBranches" />
+            <End Role="Commitment" EntitySet="Commitments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_Commitment_CommitmentId" Association="Self.FK_Fragment_Commitment_CommitmentId">
+            <End Role="Commitment" EntitySet="Commitments" />
+            <End Role="Fragment" EntitySet="Fragments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GROL_DocumentPrintLanguages" Association="Self.FK_GROL_DocumentPrintLanguages">
+            <End Role="DocumentPrintLanguages" EntitySet="DocumentPrintLanguages" />
+            <End Role="GROL" EntitySet="GROLs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragBranch_CreationUserId" Association="Self.FK_FragBranch_CreationUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="FragBranch" EntitySet="FragBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragBranch_Fragment_FragId" Association="Self.FK_FragBranch_Fragment_FragId">
+            <End Role="Fragment" EntitySet="Fragments" />
+            <End Role="FragBranch" EntitySet="FragBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragBranch_HeadBranch_BranchId" Association="Self.FK_FragBranch_HeadBranch_BranchId">
+            <End Role="HeadBranch" EntitySet="HeadBranches" />
+            <End Role="FragBranch" EntitySet="FragBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragLock_Fragment_EditFragId" Association="Self.FK_FragLock_Fragment_EditFragId">
+            <End Role="Fragment" EntitySet="Fragments" />
+            <End Role="FragLock" EntitySet="FragLocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragLock_Fragment_FragId" Association="Self.FK_FragLock_Fragment_FragId">
+            <End Role="Fragment" EntitySet="Fragments" />
+            <End Role="FragLock" EntitySet="FragLocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragLock_HeadBranch_BranchId" Association="Self.FK_FragLock_HeadBranch_BranchId">
+            <End Role="HeadBranch" EntitySet="HeadBranches" />
+            <End Role="FragLock" EntitySet="FragLocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragLock_UserAccount" Association="Self.FK_FragLock_UserAccount">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="FragLock" EntitySet="FragLocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_FragType" Association="Self.FK_Fragment_FragType">
+            <End Role="FragType" EntitySet="FragTypes" />
+            <End Role="Fragment" EntitySet="Fragments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_PrevFragID" Association="Self.FK_Fragment_PrevFragID">
+            <End Role="Fragment" EntitySet="Fragments" />
+            <End Role="Fragment1" EntitySet="Fragments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_Review" Association="Self.FK_Fragment_Review">
+            <End Role="FragReview" EntitySet="FragReviews" />
+            <End Role="Fragment" EntitySet="Fragments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_ReviewInProgress" Association="Self.FK_Fragment_ReviewInProgress">
+            <End Role="FragReviewInProgress" EntitySet="FragReviewInProgresses" />
+            <End Role="Fragment" EntitySet="Fragments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fragment_State" Association="Self.FK_Fragment_State">
+            <End Role="FragState" EntitySet="FragStates" />
+            <End Role="Fragment" EntitySet="Fragments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragRef_Fragment" Association="Self.FK_FragRef_Fragment">
+            <End Role="Fragment" EntitySet="Fragments" />
+            <End Role="FragRef" EntitySet="FragRefs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GROL_FragRef" Association="Self.FK_GROL_FragRef">
+            <End Role="FragRef" EntitySet="FragRefs" />
+            <End Role="GROL" EntitySet="GROLs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragReview_ReviewerId" Association="Self.FK_FragReview_ReviewerId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="FragReview" EntitySet="FragReviews" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FragReviewInProgress_ReviewerId" Association="Self.FK_FragReviewInProgress_ReviewerId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="FragReviewInProgress" EntitySet="FragReviewInProgresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GROL_OutputFileType" Association="Self.FK_GROL_OutputFileType">
+            <End Role="OutputFileType" EntitySet="OutputFileTypes" />
+            <End Role="GROL" EntitySet="GROLs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrolReleaseValidation_GROL" Association="Self.FK_GrolReleaseValidation_GROL">
+            <End Role="GROL" EntitySet="GROLs" />
+            <End Role="GrolReleaseValidation" EntitySet="GrolReleaseValidations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrolValidation_GROL" Association="Self.FK_GrolValidation_GROL">
+            <End Role="GROL" EntitySet="GROLs" />
+            <End Role="GrolValidation" EntitySet="GrolValidations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrolReleaseValidation_UserAccounts" Association="Self.FK_GrolReleaseValidation_UserAccounts">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="GrolReleaseValidation" EntitySet="GrolReleaseValidations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrolReleaseValidation_WorkingBranch" Association="Self.FK_GrolReleaseValidation_WorkingBranch">
+            <End Role="WorkingBranch" EntitySet="WorkingBranches" />
+            <End Role="GrolReleaseValidation" EntitySet="GrolReleaseValidations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HeadBranch_CreationUserId" Association="Self.FK_HeadBranch_CreationUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="HeadBranch" EntitySet="HeadBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HeadBranch_DeletionUserId" Association="Self.FK_HeadBranch_DeletionUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="HeadBranch" EntitySet="HeadBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HeadBranch_HeadBranch_SourceId" Association="Self.FK_HeadBranch_HeadBranch_SourceId">
+            <End Role="HeadBranch" EntitySet="HeadBranches" />
+            <End Role="HeadBranch1" EntitySet="HeadBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_HeadBranch_HeadBranchId" Association="Self.FK_WorkingBranch_HeadBranch_HeadBranchId">
+            <End Role="HeadBranch" EntitySet="HeadBranches" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocDes_UserAccounts2License_LicenseId_Id" Association="Self.FK_DocDes_UserAccounts2License_LicenseId_Id">
+            <End Role="License" EntitySet="Licenses" />
+            <End Role="UserAccounts2License" EntitySet="UserAccounts2License" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role2LPADocSuiteModule_LPADocSuiteModuleId" Association="Self.FK_Role2LPADocSuiteModule_LPADocSuiteModuleId">
+            <End Role="LPADocSuiteModule" EntitySet="LPADocSuiteModules" />
+            <End Role="Role2LPADocSuiteModule" EntitySet="Role2LPADocSuiteModule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_News_UserAccounts_CreationUserId" Association="Self.FK_News_UserAccounts_CreationUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Specialization_Specialization_ParentId" Association="Self.FK_Specialization_Specialization_ParentId">
+            <End Role="Specialization" EntitySet="Specializations" />
+            <End Role="Specialization1" EntitySet="Specializations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValue_Specialization_SpecializationId" Association="Self.FK_SpecValue_Specialization_SpecializationId">
+            <End Role="Specialization" EntitySet="Specializations" />
+            <End Role="SpecValue" EntitySet="SpecValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValueTemplate_Specialization_SpecializationId" Association="Self.FK_SpecValueTemplate_Specialization_SpecializationId">
+            <End Role="Specialization" EntitySet="Specializations" />
+            <End Role="SpecValueTemplate" EntitySet="SpecValueTemplates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValue_Branch_BranchId" Association="Self.FK_SpecValue_Branch_BranchId">
+            <End Role="WorkingBranch" EntitySet="WorkingBranches" />
+            <End Role="SpecValue" EntitySet="SpecValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValue_SpecValue_ParentId" Association="Self.FK_SpecValue_SpecValue_ParentId">
+            <End Role="SpecValue" EntitySet="SpecValues" />
+            <End Role="SpecValue1" EntitySet="SpecValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecValueTemplate_SpecValueTemplate_ParentId" Association="Self.FK_SpecValueTemplate_SpecValueTemplate_ParentId">
+            <End Role="SpecValueTemplate" EntitySet="SpecValueTemplates" />
+            <End Role="SpecValueTemplate1" EntitySet="SpecValueTemplates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocDes_UserAccounts2License_UserAccountsId_Id" Association="Self.FK_DocDes_UserAccounts2License_UserAccountsId_Id">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="UserAccounts2License" EntitySet="UserAccounts2License" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAccounts_WorkingBranch_WorkingBranchId" Association="Self.FK_UserAccounts_WorkingBranch_WorkingBranchId">
+            <End Role="WorkingBranch" EntitySet="WorkingBranches" />
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_CreationUserId" Association="Self.FK_WorkingBranch_CreationUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_DeletionUserId" Association="Self.FK_WorkingBranch_DeletionUserId">
+            <End Role="UserAccounts" EntitySet="UserAccounts" />
+            <End Role="WorkingBranch" EntitySet="WorkingBranches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkingBranch_WorkingBranch_SourceId" Association="Self.FK_WorkingBranch_WorkingBranch_SourceId">
+            <End Role="WorkingBranch" EntitySet="WorkingBranches" />
+            <End Role="WorkingBranch1" EntitySet="WorkingBranches" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Nordea_Abnahme_DocDesignerModelStoreContainer" CdmEntityContainer="DocDesignerEntities">
+          <EntitySetMapping Name="BranchActions">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.BranchAction">
+              <MappingFragment StoreEntitySet="BranchAction">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BranchStates">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.BranchState">
+              <MappingFragment StoreEntitySet="BranchState">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Commitments">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.Commitment">
+              <MappingFragment StoreEntitySet="Commitment">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="CommitDate" ColumnName="CommitDate" />
+                <ScalarProperty Name="CommitComment" ColumnName="CommitComment" />
+                <ScalarProperty Name="CommitUserId" ColumnName="CommitUserId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocumentPrintLanguages">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.DocumentPrintLanguage">
+              <MappingFragment StoreEntitySet="DocumentPrintLanguages">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="LanguageLabel" ColumnName="LanguageLabel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FragBranches">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.FragBranch">
+              <MappingFragment StoreEntitySet="FragBranch">
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="IsHead" ColumnName="IsHead" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="CreationComment" ColumnName="CreationComment" />
+                <ScalarProperty Name="CreationUserId" ColumnName="CreationUserId" />
+                <ScalarProperty Name="FragId" ColumnName="FragId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="IsTranslated" ColumnName="IsTranslated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FragLocks">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.FragLock">
+              <MappingFragment StoreEntitySet="FragLock">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="LockDate" ColumnName="LockDate" />
+                <ScalarProperty Name="ReadOnly" ColumnName="ReadOnly" />
+                <ScalarProperty Name="LockUserId" ColumnName="LockUserId" />
+                <ScalarProperty Name="FragId" ColumnName="FragId" />
+                <ScalarProperty Name="EditFragId" ColumnName="EditFragId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fragments">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.Fragment">
+              <MappingFragment StoreEntitySet="Fragment">
+                <ScalarProperty Name="FragContent" ColumnName="FragContent" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="FragName" ColumnName="FragName" />
+                <ScalarProperty Name="Lang" ColumnName="Lang" />
+                <ScalarProperty Name="BankGroup" ColumnName="BankGroup" />
+                <ScalarProperty Name="Bank" ColumnName="Bank" />
+                <ScalarProperty Name="UserGroup" ColumnName="UserGroup" />
+                <ScalarProperty Name="Layout" ColumnName="Layout" />
+                <ScalarProperty Name="Modul" ColumnName="Modul" />
+                <ScalarProperty Name="ProdGroup" ColumnName="ProdGroup" />
+                <ScalarProperty Name="ProdSubGroup" ColumnName="ProdSubGroup" />
+                <ScalarProperty Name="Product" ColumnName="Product" />
+                <ScalarProperty Name="CustomerOp" ColumnName="CustomerOp" />
+                <ScalarProperty Name="Condition1" ColumnName="Condition1" />
+                <ScalarProperty Name="Condition2" ColumnName="Condition2" />
+                <ScalarProperty Name="Condition3" ColumnName="Condition3" />
+                <ScalarProperty Name="Condition4" ColumnName="Condition4" />
+                <ScalarProperty Name="Condition5" ColumnName="Condition5" />
+                <ScalarProperty Name="Condition6" ColumnName="Condition6" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="FragTypeId" ColumnName="FragTypeId" />
+                <ScalarProperty Name="ContentText" ColumnName="ContentText" />
+                <ScalarProperty Name="MetaData" ColumnName="MetaData" />
+                <ScalarProperty Name="IsCertified" ColumnName="IsCertified" />
+                <ScalarProperty Name="FragAlias" ColumnName="FragAlias" />
+                <ScalarProperty Name="Culture" ColumnName="Culture" />
+                <ScalarProperty Name="Condition7" ColumnName="Condition7" />
+                <ScalarProperty Name="CommitmentId" ColumnName="CommitmentId" />
+                <ScalarProperty Name="IsClone" ColumnName="IsClone" />
+                <ScalarProperty Name="FragReviewId" ColumnName="FragReviewId" />
+                <ScalarProperty Name="FragStateId" ColumnName="FragStateId" />
+                <ScalarProperty Name="ReviewInProgressId" ColumnName="ReviewInProgressId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PrevFragId" ColumnName="PrevFragId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="IsStatic" ColumnName="IsStatic" />
+                <ScalarProperty Name="AppContext" ColumnName="AppContext" />
+                <ScalarProperty Name="FragHash" ColumnName="FragHash" />
+                <ScalarProperty Name="Translate" ColumnName="Translate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FragmentCaches">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.FragmentCache">
+              <MappingFragment StoreEntitySet="FragmentCache">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FragHash" ColumnName="FragHash" />
+                <ScalarProperty Name="FragName" ColumnName="FragName" />
+                <ScalarProperty Name="Lang" ColumnName="Lang" />
+                <ScalarProperty Name="Culture" ColumnName="Culture" />
+                <ScalarProperty Name="BankGroup" ColumnName="BankGroup" />
+                <ScalarProperty Name="Bank" ColumnName="Bank" />
+                <ScalarProperty Name="UserGroup" ColumnName="UserGroup" />
+                <ScalarProperty Name="Layout" ColumnName="Layout" />
+                <ScalarProperty Name="Modul" ColumnName="Modul" />
+                <ScalarProperty Name="ProdGroup" ColumnName="ProdGroup" />
+                <ScalarProperty Name="ProdSubGroup" ColumnName="ProdSubGroup" />
+                <ScalarProperty Name="Product" ColumnName="Product" />
+                <ScalarProperty Name="CustomerOp" ColumnName="CustomerOp" />
+                <ScalarProperty Name="Condition1" ColumnName="Condition1" />
+                <ScalarProperty Name="Condition2" ColumnName="Condition2" />
+                <ScalarProperty Name="Condition3" ColumnName="Condition3" />
+                <ScalarProperty Name="Condition4" ColumnName="Condition4" />
+                <ScalarProperty Name="Condition5" ColumnName="Condition5" />
+                <ScalarProperty Name="Condition6" ColumnName="Condition6" />
+                <ScalarProperty Name="Condition7" ColumnName="Condition7" />
+                <ScalarProperty Name="AppContext" ColumnName="AppContext" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FragmentCacheItems">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.FragmentCacheItem">
+              <MappingFragment StoreEntitySet="FragmentCacheItem">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FragmentCacheId" ColumnName="FragmentCacheId" />
+                <ScalarProperty Name="FragId" ColumnName="FragId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FragRefs">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.FragRef">
+              <MappingFragment StoreEntitySet="FragRef">
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="ChildName" ColumnName="ChildName" />
+                <ScalarProperty Name="ChildAlias" ColumnName="ChildAlias" />
+                <ScalarProperty Name="DisplayExpression" ColumnName="DisplayExpression" />
+                <ScalarProperty Name="BookMark" ColumnName="BookMark" />
+                <ScalarProperty Name="TargetFrame" ColumnName="TargetFrame" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FragReviews">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.FragReview">
+              <MappingFragment StoreEntitySet="FragReview">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ReviewedOn" ColumnName="ReviewedOn" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="IsAccepted" ColumnName="IsAccepted" />
+                <ScalarProperty Name="ReviewerId" ColumnName="ReviewerId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FragReviewInProgresses">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.FragReviewInProgress">
+              <MappingFragment StoreEntitySet="FragReviewInProgress">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="InReviewSince" ColumnName="InReviewSince" />
+                <ScalarProperty Name="ReviewerId" ColumnName="ReviewerId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FragStates">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.FragState">
+              <MappingFragment StoreEntitySet="FragState">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FragTypes">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.FragType">
+              <MappingFragment StoreEntitySet="FragType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Label" ColumnName="Label" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GROLs">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.GROL">
+              <MappingFragment StoreEntitySet="GROL">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RootDocId" ColumnName="RootDocId" />
+                <ScalarProperty Name="OutputFileTypeId" ColumnName="OutputFileTypeId" />
+                <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="StaticDocName" ColumnName="StaticDocName" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="AppContext" ColumnName="AppContext" />
+                <ScalarProperty Name="BankGroup" ColumnName="BankGroup" />
+                <ScalarProperty Name="Bank" ColumnName="Bank" />
+                <ScalarProperty Name="UserGroup" ColumnName="UserGroup" />
+                <ScalarProperty Name="Layout" ColumnName="Layout" />
+                <ScalarProperty Name="CultureFormatName" ColumnName="CultureFormatName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GrolReleaseValidations">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.GrolReleaseValidation">
+              <MappingFragment StoreEntitySet="GrolReleaseValidation">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="GrolId" ColumnName="GrolId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="Cond0" ColumnName="Cond0" />
+                <ScalarProperty Name="Cond1" ColumnName="Cond1" />
+                <ScalarProperty Name="Cond2" ColumnName="Cond2" />
+                <ScalarProperty Name="Cond3" ColumnName="Cond3" />
+                <ScalarProperty Name="Cond4" ColumnName="Cond4" />
+                <ScalarProperty Name="Cond5" ColumnName="Cond5" />
+                <ScalarProperty Name="Cond6" ColumnName="Cond6" />
+                <ScalarProperty Name="Cond7" ColumnName="Cond7" />
+                <ScalarProperty Name="BranchCounter" ColumnName="BranchCounter" />
+                <ScalarProperty Name="ValidationBranchId" ColumnName="ValidationBranchId" />
+                <ScalarProperty Name="ValidationUserId" ColumnName="ValidationUserId" />
+                <ScalarProperty Name="ValidationDate" ColumnName="ValidationDate" />
+                <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GrolValidations">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.GrolValidation">
+              <MappingFragment StoreEntitySet="GrolValidation">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="GrolId" ColumnName="GrolId" />
+                <ScalarProperty Name="MaxPageCount" ColumnName="MaxPageCount" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HeadBranches">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.HeadBranch">
+              <MappingFragment StoreEntitySet="HeadBranch">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BranchStateId" ColumnName="BranchStateId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="CreationComment" ColumnName="CreationComment" />
+                <ScalarProperty Name="DeletionDate" ColumnName="DeletionDate" />
+                <ScalarProperty Name="DeletionComment" ColumnName="DeletionComment" />
+                <ScalarProperty Name="CreationUserId" ColumnName="CreationUserId" />
+                <ScalarProperty Name="DeletionUserId" ColumnName="DeletionUserId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Licenses">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.License">
+              <MappingFragment StoreEntitySet="License">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Licensee" ColumnName="Licensee" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="LicenseKey" ColumnName="LicenseKey" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LPADocSuiteModules">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.LPADocSuiteModule">
+              <MappingFragment StoreEntitySet="LPADocSuiteModule">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ModuleName" ColumnName="ModuleName" />
+                <ScalarProperty Name="IsActivated" ColumnName="IsActivated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="News">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.News">
+              <MappingFragment StoreEntitySet="News">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="CreationUserId" ColumnName="CreationUserId" />
+                <ScalarProperty Name="IsPublished" ColumnName="IsPublished" />
+                <ScalarProperty Name="WordContent" ColumnName="WordContent" />
+                <ScalarProperty Name="HtmlContent" ColumnName="HtmlContent" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OutputFileTypes">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.OutputFileType">
+              <MappingFragment StoreEntitySet="OutputFileType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role2LPADocSuiteModule">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.Role2LPADocSuiteModule">
+              <MappingFragment StoreEntitySet="Role2LPADocSuiteModule">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="ModuleId" ColumnName="ModuleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Specializations">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.Specialization">
+              <MappingFragment StoreEntitySet="Specialization">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="SpecName" ColumnName="SpecName" />
+                <ScalarProperty Name="GuiName" ColumnName="GuiName" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
+                <ScalarProperty Name="UniqueParent" ColumnName="UniqueParent" />
+                <ScalarProperty Name="Hint" ColumnName="Hint" />
+                <ScalarProperty Name="de" ColumnName="de" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SpecValues">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.SpecValue">
+              <MappingFragment StoreEntitySet="SpecValue">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="SpecializationId" ColumnName="SpecializationId" />
+                <ScalarProperty Name="SpecValue1" ColumnName="SpecValue" />
+                <ScalarProperty Name="de" ColumnName="de" />
+                <ScalarProperty Name="en" ColumnName="en" />
+                <ScalarProperty Name="es" ColumnName="es" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SpecValueTemplates">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.SpecValueTemplate">
+              <MappingFragment StoreEntitySet="SpecValueTemplate">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="SpecializationId" ColumnName="SpecializationId" />
+                <ScalarProperty Name="SpecValue" ColumnName="SpecValue" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAccounts">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.UserAccount">
+              <MappingFragment StoreEntitySet="UserAccounts">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+                <ScalarProperty Name="CanCertify" ColumnName="CanCertify" />
+                <ScalarProperty Name="WorkingBranchId" ColumnName="WorkingBranchId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="IsActivated" ColumnName="IsActivated" />
+                <ScalarProperty Name="ActiveFrom" ColumnName="ActiveFrom" />
+                <ScalarProperty Name="ActiveTo" ColumnName="ActiveTo" />
+                <ScalarProperty Name="Hash" ColumnName="Hash" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAccounts2License">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.UserAccounts2License">
+              <MappingFragment StoreEntitySet="UserAccounts2License">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LicenseId" ColumnName="LicenseId" />
+                <ScalarProperty Name="UserAccountsId" ColumnName="UserAccountsId" />
+                <ScalarProperty Name="Used" ColumnName="Used" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserGroupCaches">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.UserGroupCache">
+              <MappingFragment StoreEntitySet="UserGroupCache">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="GroupSID" ColumnName="GroupSID" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserGroups">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.UserGroup">
+              <MappingFragment StoreEntitySet="UserGroups">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkingBranches">
+            <EntityTypeMapping TypeName="Nordea_Abnahme_DocDesignerModel.WorkingBranch">
+              <MappingFragment StoreEntitySet="WorkingBranch">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BranchStateId" ColumnName="BranchStateId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="CreationComment" ColumnName="CreationComment" />
+                <ScalarProperty Name="DeletionDate" ColumnName="DeletionDate" />
+                <ScalarProperty Name="DeletionComment" ColumnName="DeletionComment" />
+                <ScalarProperty Name="CreationUserId" ColumnName="CreationUserId" />
+                <ScalarProperty Name="DeletionUserId" ColumnName="DeletionUserId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="IsHead" ColumnName="IsHead" />
+                <ScalarProperty Name="HeadBranchId" ColumnName="HeadBranchId" />
+                <ScalarProperty Name="BranchActionId" ColumnName="BranchActionId" />
+                <ScalarProperty Name="MergedBranchId" ColumnName="MergedBranchId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

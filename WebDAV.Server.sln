@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdamMil.Web", "Utils\Web\Ad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebApp", "TestWebApp\TestWebApp.csproj", "{FD4ECE2E-82C5-4C50-80BC-C7E732D93CEA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebAppDomain", "TestWebAppDomain\TestWebAppDomain.csproj", "{A76C28BA-18AF-4EDC-914B-688DFFD4AED8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{FD4ECE2E-82C5-4C50-80BC-C7E732D93CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD4ECE2E-82C5-4C50-80BC-C7E732D93CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD4ECE2E-82C5-4C50-80BC-C7E732D93CEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A76C28BA-18AF-4EDC-914B-688DFFD4AED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A76C28BA-18AF-4EDC-914B-688DFFD4AED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A76C28BA-18AF-4EDC-914B-688DFFD4AED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A76C28BA-18AF-4EDC-914B-688DFFD4AED8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -46,6 +46,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -209,6 +215,10 @@
     <ProjectReference Include="..\Server\WebDAV.Server.csproj">
       <Project>{2c80b8ca-aa29-4f20-9225-fb77c46f9d32}</Project>
       <Name>WebDAV.Server</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestWebAppDomain\TestWebAppDomain.csproj">
+      <Project>{a76c28ba-18af-4edc-914b-688dffd4aed8}</Project>
+      <Name>TestWebAppDomain</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utils\Collections\AdamMil.Collections.csproj">
       <Project>{d9724c65-c54a-4671-ba0b-40b0b38464dd}</Project>
