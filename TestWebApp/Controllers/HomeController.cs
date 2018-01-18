@@ -7,13 +7,14 @@ using TestWebAppDomain;
 using TestWebAppDomain.DAL;
 using Fragment = TestWebApp.Models.Fragment;
 using AutoMapper;
+using TestWebAppDomain.Services;
 
 namespace TestWebApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly FragmentService _fragmentService;
-        private const string WebDavBaseUrl = @"http://lpa-h-nb-228:63165/webdav/";            // Other project IIS Server
+        private const string WebDavBaseUrl = @"http://lpa-h-nb-228:63165/webdav/";
 
 
         public HomeController()

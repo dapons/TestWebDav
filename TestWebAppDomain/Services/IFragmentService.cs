@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TestWebAppDomain.DAL;
 
-namespace TestWebAppDomain
+namespace TestWebAppDomain.Services
 {
     public interface IFragmentService
     {

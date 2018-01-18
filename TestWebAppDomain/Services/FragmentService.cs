@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Net.Sockets;
 using TestWebAppDomain.DAL;
 
-namespace TestWebAppDomain
+namespace TestWebAppDomain.Services
 {
     public class FragmentService : IFragmentService
     {

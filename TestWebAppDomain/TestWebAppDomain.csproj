@@ -157,9 +157,11 @@
     <Compile Include="DAL\WorkingBranch.cs">
       <DependentUpon>DocDesignerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="FragmentService.cs" />
-    <Compile Include="IFragmentService.cs" />
+    <Compile Include="Services\FragmentService.cs" />
+    <Compile Include="Services\IFragmentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\WebDav\SqlEntryResource.cs" />
+    <Compile Include="Services\WebDav\SqlService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -188,6 +190,16 @@
       <DependentUpon>DocDesignerModel.edmx</DependentUpon>
       <LastGenOutput>DocDesignerModel.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Server\WebDAV.Server.csproj">
+      <Project>{2C80B8CA-AA29-4F20-9225-FB77C46F9D32}</Project>
+      <Name>WebDAV.Server</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Web\AdamMil.Web.csproj">
+      <Project>{571D3396-5A8E-4AF6-9A28-4AE2EEC11081}</Project>
+      <Name>AdamMil.Web</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
