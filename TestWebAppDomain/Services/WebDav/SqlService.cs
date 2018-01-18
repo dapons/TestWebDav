@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,13 @@ namespace TestWebAppDomain.Services.WebDav
 
         public override IWebDAVResource ResolveResource(WebDAVContext context, string resourcePath)
         {
-            if (!int.TryParse(resourcePath, out int id))
+            if (string.IsNullOrWhiteSpace(resourcePath))
+            {
+                return null;
+            }
+
+            var fileId = Path.GetFileNameWithoutExtension(resourcePath);
+            if (!int.TryParse(fileId, out int id))
             {
                 return null;
             }
@@ -34,5 +41,8 @@ namespace TestWebAppDomain.Services.WebDav
             var resource = new SqlEntryResource(fragment);
             return resource;
         }
+
+
+
     }
 }

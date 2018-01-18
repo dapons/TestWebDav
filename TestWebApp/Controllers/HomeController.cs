@@ -14,7 +14,10 @@ namespace TestWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly FragmentService _fragmentService;
-        private const string WebDavBaseUrl = @"http://lpa-h-nb-228:63165/sql/";
+        // private const string WebDavBaseUrl = @"http://localhost:63165/sql/";     // IIS Express
+        //private const string WebDavBaseUrl = @"http://lpa-h-nb-228:45321/TestWebApp/sql/";        // IIS
+        private const string WebDavBaseUrl = @"http://localhost/TestWebApp/sql/";        // IIS
+
 
 
         public HomeController()
@@ -38,6 +41,7 @@ namespace TestWebApp.Controllers
             }
 
             var outputFragment = Mapper.Map<Fragment>(fragment);
+
             //outputFragment.DefaultUrl = HttpUtility.UrlDecode($"{WebDavBaseUrl}{outputFragment.Name}");
             //outputFragment.OpenUrl = HttpUtility.UrlDecode($"ms-word:ofv|u|{WebDavBaseUrl}{outputFragment.Name}");
             //outputFragment.EditUrl = HttpUtility.UrlDecode($"ms-word:ofe|u|{WebDavBaseUrl}{outputFragment.Name}");
